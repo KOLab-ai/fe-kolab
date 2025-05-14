@@ -11,9 +11,10 @@ interface AnimatedSectionProps {
   className?: string
   delay?: number
   direction?: "up" | "down" | "left" | "right" | "none"
+  id?: string
 }
 
-export function AnimatedSection({ children, className, delay = 0, direction = "up" }: AnimatedSectionProps) {
+export function AnimatedSection({ children, className, delay = 0, direction = "up", id }: AnimatedSectionProps) {
   const { ref, isIntersecting } = useIntersectionObserver()
 
   const getDirectionClasses = () => {
@@ -36,6 +37,7 @@ export function AnimatedSection({ children, className, delay = 0, direction = "u
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
+      id={id}
       className={cn(
         "transition-all duration-700 ease-out",
         isIntersecting ? "opacity-100 transform-none" : `opacity-0 ${getDirectionClasses()}`,
