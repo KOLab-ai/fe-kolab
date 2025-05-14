@@ -1,5 +1,5 @@
 import { Brain } from "lucide-react";
-import Link from "next/link";
+// import Link from "next/link";
 
 export function Footer() {
   return (
@@ -15,7 +15,7 @@ export function Footer() {
               AI-powered influencer matching for successful marketing campaigns.
             </p>
           </div>
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-sm font-medium">Platform</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -125,7 +125,7 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground border-white/10 dark:border-gray-800/50">
           <p>© 2025 KOLab.ai. All rights reserved.</p>
