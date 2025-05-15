@@ -14,12 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 
-interface DashboardHeaderProps {
-  onMenuClick: () => void;
-}
-
-export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+export function DashboardHeader() {
+  const { toggleSidebar } = useSidebar()
+  
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md glassmorphism border-b border-white/10 dark:border-gray-800/50 px-4 md:px-6">
       <div className="flex h-16 items-center gap-4 justify-between">
@@ -27,11 +26,13 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           variant="ghost"
           size="icon"
           className="md:hidden"
-          onClick={onMenuClick}
+          onClick={toggleSidebar}
         >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
+
+        <SidebarTrigger className="hidden md:flex" />
 
         <div className="w-full flex justify-between items-center gap-4 md:gap-8">
           <form className="hidden md:flex-1 md:flex max-w-sm">
