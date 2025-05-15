@@ -10,6 +10,27 @@ import { AnimatedSection } from "../animated-section";
 import { StaggeredChildren } from "../staggered-children";
 
 export function WorkSection() {
+  const steps = [
+    {
+      number: 1,
+      title: "Create Your Account",
+      description:
+        "Sign up with your email or phone number and select your role as a marketer.",
+    },
+    {
+      number: 2,
+      title: "Complete Onboarding",
+      description:
+        "Tell us about your campaign goals, target audience, and product category.",
+    },
+    {
+      number: 3,
+      title: "Get Recommendations",
+      description:
+        "Receive AI-powered recommendations of the most suitable influencers for your campaign.",
+    },
+  ];
+
   return (
     <AnimatedSection
       id="how-it-works"
@@ -29,51 +50,23 @@ export function WorkSection() {
           </div>
         </div>
         <StaggeredChildren className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-brand opacity-10 rounded-bl-full"></div>
-            <CardHeader>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-brand text-white mb-4">
-                <span className="text-xl font-bold">1</span>
-              </div>
-              <CardTitle>Create Your Account</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Sign up with your email or phone number and select your role as
-                a marketer.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-brand opacity-10 rounded-bl-full"></div>
-            <CardHeader>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-brand text-white mb-4">
-                <span className="text-xl font-bold">2</span>
-              </div>
-              <CardTitle>Complete Onboarding</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Tell us about your campaign goals, target audience, and product
-                category.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-brand opacity-10 rounded-bl-full"></div>
-            <CardHeader>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-brand text-white mb-4">
-                <span className="text-xl font-bold">3</span>
-              </div>
-              <CardTitle>Get Recommendations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Receive AI-powered recommendations of the most suitable
-                influencers for your campaign.
-              </p>
-            </CardContent>
-          </AnimatedCard>
+          {steps.map((step) => (
+            <AnimatedCard
+              key={step.number}
+              className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10 relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-brand opacity-10 rounded-bl-full"></div>
+              <CardHeader>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-brand text-white mb-4">
+                  <span className="text-xl font-bold">{step.number}</span>
+                </div>
+                <CardTitle>{step.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>{step.description}</p>
+              </CardContent>
+            </AnimatedCard>
+          ))}
         </StaggeredChildren>
       </div>
     </AnimatedSection>

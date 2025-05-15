@@ -9,6 +9,29 @@ import { AnimatedSection } from "../animated-section";
 import { StaggeredChildren } from "../staggered-children";
 
 export function FaqSection() {
+  const faq = [
+    {
+      question: "How does KOLab.ai match marketers with influencers?",
+      answer:
+        "KOLab.ai uses advanced AI algorithms to analyze both marketer requirements and influencer profiles. The system considers factors like campaign goals, target audience demographics, product category, influencer content style, engagement rates, and audience authenticity to create optimal matches.",
+    },
+    {
+      question: "Can I change my campaign parameters after setting them?",
+      answer:
+        "Yes, you can change your campaign parameters anytime. The system will automatically update the recommendations based on your new requirements.",
+    },
+    {
+      question: "Is my data secure on KOLab.ai?",
+      answer:
+        "Absolutely. We take data security very seriously. All user data is encrypted and stored securely, and we implement robust protection against common security vulnerabilities. We never share your personal information with third parties without your explicit consent.",
+    },
+    {
+      question: "How many users can the platform support?",
+      answer:
+        "KOLab.ai is built to scale. Our platform can handle at least 500 users per month initially, with the ability to scale horizontally to accommodate growth and usage spikes during large campaign launches.",
+    },
+  ];
+
   return (
     <AnimatedSection
       id="faq"
@@ -27,57 +50,19 @@ export function FaqSection() {
           </div>
         </div>
         <StaggeredChildren className="grid gap-6 mt-12 md:gap-8">
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <CardTitle>
-                How does KOLab.ai match marketers with influencers?
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                KOLab.ai uses advanced AI algorithms to analyze both marketer
-                requirements and influencer profiles. The system considers
-                factors like campaign goals, target audience demographics,
-                product category, influencer content style, engagement rates,
-                and audience authenticity to create optimal matches.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <CardTitle>
-                Can I change my campaign parameters after setting them?
-              </CardTitle>
-            </CardHeader>
-            <CardContent></CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <CardTitle>Is my data secure on KOLab.ai?</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Absolutely. We take data security very seriously. All user data
-                is encrypted and stored securely, and we implement robust
-                protection against common security vulnerabilities. We never
-                share your personal information with third parties without your
-                explicit consent.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <CardTitle>How many users can the platform support?</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                KOLab.ai is built to scale. Our platform can handle at least 500
-                users per month initially, with the ability to scale
-                horizontally to accommodate growth and usage spikes during large
-                campaign launches.
-              </p>
-            </CardContent>
-          </AnimatedCard>
+          {faq.map((faq) => (
+            <AnimatedCard
+              key={faq.question}
+              className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10"
+            >
+              <CardHeader>
+                <CardTitle>{faq.question}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>{faq.answer}</p>
+              </CardContent>
+            </AnimatedCard>
+          ))}
         </StaggeredChildren>
       </div>
     </AnimatedSection>
