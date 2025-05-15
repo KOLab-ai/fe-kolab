@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   BarChart3,
   Brain,
@@ -17,16 +17,16 @@ import {
   Users,
   X,
   Sparkles,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
-  open: boolean
-  onClose: () => void
+  open: boolean;
+  onClose: () => void;
 }
 
 export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const routes = [
     {
@@ -77,7 +77,7 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       href: "/dashboard/settings",
       active: pathname === "/dashboard/settings",
     },
-  ]
+  ];
 
   return (
     <>
@@ -94,7 +94,12 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                 KOLab.ai
               </span>
             </Link>
-            <Button variant="ghost" size="icon" className="absolute right-4 top-4 rounded-full" onClick={onClose}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 rounded-full"
+              onClick={onClose}
+            >
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </Button>
@@ -109,7 +114,9 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                     onClick={onClose}
                     className={cn(
                       "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-primary/10 hover:text-primary",
-                      route.active ? "bg-primary/10 text-primary" : "text-muted-foreground",
+                      route.active
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground",
                     )}
                   >
                     <route.icon
@@ -119,7 +126,9 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                       )}
                     />
                     <span>{route.label}</span>
-                    {route.active && <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />}
+                    {route.active && (
+                      <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+                    )}
                   </Link>
                 ))}
               </div>
@@ -129,8 +138,14 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                   <Sparkles className="h-5 w-5" />
                   <p className="font-semibold">Pro Features</p>
                 </div>
-                <p className="mt-2 text-xs opacity-90">Unlock advanced analytics and AI-powered recommendations</p>
-                <Button size="sm" variant="secondary" className="mt-3 w-full bg-white/20 hover:bg-white/30 text-white">
+                <p className="mt-2 text-xs opacity-90">
+                  Unlock advanced analytics and AI-powered recommendations
+                </p>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="mt-3 w-full bg-white/20 hover:bg-white/30 text-white"
+                >
                   Upgrade Now
                 </Button>
               </div>
@@ -158,7 +173,9 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                   href={route.href}
                   className={cn(
                     "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-primary/10 hover:text-primary",
-                    route.active ? "bg-primary/10 text-primary" : "text-muted-foreground",
+                    route.active
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground",
                   )}
                 >
                   <route.icon
@@ -168,7 +185,9 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                     )}
                   />
                   <span>{route.label}</span>
-                  {route.active && <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />}
+                  {route.active && (
+                    <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+                  )}
                 </Link>
               ))}
             </div>
@@ -178,8 +197,14 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                 <Sparkles className="h-5 w-5" />
                 <p className="font-semibold">Pro Features</p>
               </div>
-              <p className="mt-2 text-xs opacity-90">Unlock advanced analytics and AI-powered recommendations</p>
-              <Button size="sm" variant="secondary" className="mt-3 w-full bg-white/20 hover:bg-white/30 text-white">
+              <p className="mt-2 text-xs opacity-90">
+                Unlock advanced analytics and AI-powered recommendations
+              </p>
+              <Button
+                size="sm"
+                variant="secondary"
+                className="mt-3 w-full bg-white/20 hover:bg-white/30 text-white"
+              >
                 Upgrade Now
               </Button>
             </div>
@@ -187,5 +212,5 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         </ScrollArea>
       </div>
     </>
-  )
+  );
 }

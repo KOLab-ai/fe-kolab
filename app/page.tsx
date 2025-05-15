@@ -24,20 +24,19 @@ export default function LandingPage() {
         <BenefitSection />
 
         {/* How It Works Section */}
-        <WorkSection/>
+        <WorkSection />
 
         {/* Testimonials Section */}
-        <TestimonialSection/>
+        <TestimonialSection />
 
         {/* FAQ Section */}
-        <FaqSection/>
+        <FaqSection />
 
         {/* CTA Section */}
-        <CtaSection/>
-        
+        <CtaSection />
       </main>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 }

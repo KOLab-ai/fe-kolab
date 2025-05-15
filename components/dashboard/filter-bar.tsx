@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface FilterBarProps {
-  activeFilter: string
-  setActiveFilter: (filter: string) => void
+  activeFilter: string;
+  setActiveFilter: (filter: string) => void;
 }
 
 export function FilterBar({ activeFilter, setActiveFilter }: FilterBarProps) {
@@ -18,7 +18,7 @@ export function FilterBar({ activeFilter, setActiveFilter }: FilterBarProps) {
     { id: "health", label: "Health" },
     { id: "travel", label: "Travel" },
     { id: "finance", label: "Finance" },
-  ]
+  ];
 
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hidden">
@@ -39,5 +39,5 @@ export function FilterBar({ activeFilter, setActiveFilter }: FilterBarProps) {
         </Button>
       ))}
     </div>
-  )
+  );
 }

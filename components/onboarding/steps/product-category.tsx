@@ -1,19 +1,23 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect } from "react"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Textarea } from "@/components/ui/textarea"
+import { useEffect } from "react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProductCategoryProps {
-  formData: any
-  updateFormData: (fieldName: string, value: any) => void
-  setIsNextDisabled: (isDisabled: boolean) => void
+  formData: any;
+  updateFormData: (fieldName: string, value: any) => void;
+  setIsNextDisabled: (isDisabled: boolean) => void;
 }
 
-export function ProductCategory({ formData, updateFormData, setIsNextDisabled }: ProductCategoryProps) {
+export function ProductCategory({
+  formData,
+  updateFormData,
+  setIsNextDisabled,
+}: ProductCategoryProps) {
   const categoryOptions = [
     { id: "fashion", label: "Fashion & Apparel" },
     { id: "beauty", label: "Beauty & Cosmetics" },
@@ -27,17 +31,24 @@ export function ProductCategory({ formData, updateFormData, setIsNextDisabled }:
     { id: "education", label: "Education & Learning" },
     { id: "sports", label: "Sports & Fitness" },
     { id: "other", label: "Other" },
-  ]
+  ];
 
   useEffect(() => {
     // Check if a category is selected and description has at least 10 characters
-    const isValid = formData.productCategory && formData.productDescription?.length >= 10
-    setIsNextDisabled(!isValid)
-  }, [formData.productCategory, formData.productDescription, setIsNextDisabled])
+    const isValid =
+      formData.productCategory && formData.productDescription?.length >= 10;
+    setIsNextDisabled(!isValid);
+  }, [
+    formData.productCategory,
+    formData.productDescription,
+    setIsNextDisabled,
+  ]);
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    updateFormData("productDescription", e.target.value)
-  }
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    updateFormData("productDescription", e.target.value);
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -45,7 +56,9 @@ export function ProductCategory({ formData, updateFormData, setIsNextDisabled }:
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
           Product Category
         </h1>
-        <p className="text-muted-foreground">Tell us about the product or service you want to promote.</p>
+        <p className="text-muted-foreground">
+          Tell us about the product or service you want to promote.
+        </p>
       </div>
 
       <div className="space-y-6 mt-8">
@@ -78,7 +91,10 @@ export function ProductCategory({ formData, updateFormData, setIsNextDisabled }:
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="product-description" className="text-base font-medium">
+          <Label
+            htmlFor="product-description"
+            className="text-base font-medium"
+          >
             Product Description
           </Label>
           <Textarea
@@ -90,7 +106,11 @@ export function ProductCategory({ formData, updateFormData, setIsNextDisabled }:
           />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Minimum 10 characters</span>
-            <span className={formData.productDescription?.length >= 10 ? "text-primary" : ""}>
+            <span
+              className={
+                formData.productDescription?.length >= 10 ? "text-primary" : ""
+              }
+            >
               {formData.productDescription?.length || 0} characters
             </span>
           </div>
@@ -98,8 +118,9 @@ export function ProductCategory({ formData, updateFormData, setIsNextDisabled }:
       </div>
 
       <p className="text-sm text-center text-muted-foreground pt-4">
-        This information will help us match you with influencers who have experience in your product category.
+        This information will help us match you with influencers who have
+        experience in your product category.
       </p>
     </div>
-  )
+  );
 }

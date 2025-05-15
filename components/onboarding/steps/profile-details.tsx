@@ -1,33 +1,37 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect } from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { useEffect } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface ProfileDetailsProps {
-  formData: any
-  updateFormData: (fieldName: string, value: any) => void
-  setIsNextDisabled: (isDisabled: boolean) => void
+  formData: any;
+  updateFormData: (fieldName: string, value: any) => void;
+  setIsNextDisabled: (isDisabled: boolean) => void;
 }
 
-export function ProfileDetails({ formData, updateFormData, setIsNextDisabled }: ProfileDetailsProps) {
+export function ProfileDetails({
+  formData,
+  updateFormData,
+  setIsNextDisabled,
+}: ProfileDetailsProps) {
   // Check if form is valid
   const validateForm = () => {
-    const { fullName, email, company } = formData
-    const isValid = fullName && email && company && email.includes("@")
-    setIsNextDisabled(!isValid)
-  }
+    const { fullName, email, company } = formData;
+    const isValid = fullName && email && company && email.includes("@");
+    setIsNextDisabled(!isValid);
+  };
 
   useEffect(() => {
-    validateForm()
+    validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData])
+  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData(e.target.name, e.target.value)
-  }
+    updateFormData(e.target.name, e.target.value);
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -35,7 +39,9 @@ export function ProfileDetails({ formData, updateFormData, setIsNextDisabled }: 
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
           Profile Details
         </h1>
-        <p className="text-muted-foreground">Tell us a bit about yourself so we can personalize your experience.</p>
+        <p className="text-muted-foreground">
+          Tell us a bit about yourself so we can personalize your experience.
+        </p>
       </div>
 
       <form className="space-y-4 mt-8">
@@ -92,8 +98,9 @@ export function ProfileDetails({ formData, updateFormData, setIsNextDisabled }: 
       </form>
 
       <p className="text-sm text-center text-muted-foreground pt-4">
-        Your information is secure and will never be shared without your permission.
+        Your information is secure and will never be shared without your
+        permission.
       </p>
     </div>
-  )
+  );
 }

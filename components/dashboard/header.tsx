@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { Bell, Menu, MessageSquare, Search, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { Bell, Menu, MessageSquare, Search, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,19 +11,24 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 interface DashboardHeaderProps {
-  onMenuClick: () => void
+  onMenuClick: () => void;
 }
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md glassmorphism border-b border-white/10 dark:border-gray-800/50 px-4 md:px-6">
       <div className="flex h-16 items-center gap-4 justify-between">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={onMenuClick}
+        >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
@@ -78,14 +83,26 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full bg-background/50 hover:bg-background/80">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-background/50 hover:bg-background/80"
+                >
                   <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-                    <AvatarFallback className="bg-primary/10 text-primary">JD</AvatarFallback>
+                    <AvatarImage
+                      src="/placeholder.svg?height=32&width=32"
+                      alt="User"
+                    />
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      JD
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="glassmorphism border-white/10 dark:border-gray-800/50">
+              <DropdownMenuContent
+                align="end"
+                className="glassmorphism border-white/10 dark:border-gray-800/50"
+              >
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -99,5 +116,5 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

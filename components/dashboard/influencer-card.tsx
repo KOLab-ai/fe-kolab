@@ -1,10 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   BookmarkIcon,
   CheckCircle,
@@ -16,8 +21,13 @@ import {
   Twitter,
   Youtube,
   TrendingUp,
-} from "lucide-react"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -25,47 +35,47 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 interface InfluencerCardProps {
-  influencer: any
+  influencer: any;
 }
 
 export function InfluencerCard({ influencer }: InfluencerCardProps) {
-  const [saved, setSaved] = useState(false)
-  const [liked, setLiked] = useState(false)
+  const [saved, setSaved] = useState(false);
+  const [liked, setLiked] = useState(false);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + "M"
+      return (num / 1000000).toFixed(1) + "M";
     }
     if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "K"
+      return (num / 1000).toFixed(1) + "K";
     }
-    return num.toString()
-  }
+    return num.toString();
+  };
 
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
       case "instagram":
-        return <Instagram className="h-4 w-4" />
+        return <Instagram className="h-4 w-4" />;
       case "youtube":
-        return <Youtube className="h-4 w-4" />
+        return <Youtube className="h-4 w-4" />;
       case "tiktok":
-        return <TiktokIcon className="h-4 w-4" />
+        return <TiktokIcon className="h-4 w-4" />;
       case "twitter":
-        return <Twitter className="h-4 w-4" />
+        return <Twitter className="h-4 w-4" />;
       default:
-        return <ExternalLink className="h-4 w-4" />
+        return <ExternalLink className="h-4 w-4" />;
     }
-  }
+  };
 
   const getMatchScoreColor = (score: number) => {
-    if (score >= 90) return "bg-gradient-to-r from-emerald-500 to-green-500"
-    if (score >= 80) return "bg-gradient-to-r from-green-500 to-emerald-400"
-    if (score >= 70) return "bg-gradient-to-r from-amber-500 to-yellow-500"
-    return "bg-gradient-to-r from-yellow-500 to-amber-400"
-  }
+    if (score >= 90) return "bg-gradient-to-r from-emerald-500 to-green-500";
+    if (score >= 80) return "bg-gradient-to-r from-green-500 to-emerald-400";
+    if (score >= 70) return "bg-gradient-to-r from-amber-500 to-yellow-500";
+    return "bg-gradient-to-r from-yellow-500 to-amber-400";
+  };
 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-md glassmorphism hover:shadow-primary/10 group">
@@ -81,7 +91,9 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                     className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm"
                     onClick={() => setSaved(!saved)}
                   >
-                    <BookmarkIcon className={`h-4 w-4 ${saved ? "fill-primary text-primary" : ""}`} />
+                    <BookmarkIcon
+                      className={`h-4 w-4 ${saved ? "fill-primary text-primary" : ""}`}
+                    />
                     <span className="sr-only">Save</span>
                   </Button>
                 </TooltipTrigger>
@@ -100,7 +112,9 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                     className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm"
                     onClick={() => setLiked(!liked)}
                   >
-                    <Heart className={`h-4 w-4 ${liked ? "fill-secondary text-secondary" : ""}`} />
+                    <Heart
+                      className={`h-4 w-4 ${liked ? "fill-secondary text-secondary" : ""}`}
+                    />
                     <span className="sr-only">Like</span>
                   </Button>
                 </TooltipTrigger>
@@ -133,8 +147,13 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar className="h-10 w-10 border-2 border-primary/20">
-              <AvatarImage src={influencer.image || "/placeholder.svg"} alt={influencer.name} />
-              <AvatarFallback className="bg-primary/10 text-primary">{influencer.name.charAt(0)}</AvatarFallback>
+              <AvatarImage
+                src={influencer.image || "/placeholder.svg"}
+                alt={influencer.name}
+              />
+              <AvatarFallback className="bg-primary/10 text-primary">
+                {influencer.name.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <div>
               <h3 className="font-medium leading-none">{influencer.name}</h3>
@@ -144,7 +163,10 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
               </p>
             </div>
           </div>
-          <Badge variant="outline" className="flex items-center gap-1 bg-primary/5 border-primary/20 text-primary">
+          <Badge
+            variant="outline"
+            className="flex items-center gap-1 bg-primary/5 border-primary/20 text-primary"
+          >
             {getPlatformIcon(influencer.platform)}
             {influencer.platform}
           </Badge>
@@ -202,13 +224,20 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
           <DialogContent className="sm:max-w-[600px] glassmorphism border-white/10 dark:border-gray-800/50">
             <DialogHeader>
               <DialogTitle>Influencer Profile</DialogTitle>
-              <DialogDescription>Detailed information about {influencer.name}</DialogDescription>
+              <DialogDescription>
+                Detailed information about {influencer.name}
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 border-2 border-primary/20">
-                  <AvatarImage src={influencer.image || "/placeholder.svg"} alt={influencer.name} />
-                  <AvatarFallback className="bg-primary/10 text-primary">{influencer.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage
+                    src={influencer.image || "/placeholder.svg"}
+                    alt={influencer.name}
+                  />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {influencer.name.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <h2 className="text-xl font-semibold">{influencer.name}</h2>
@@ -230,13 +259,17 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
 
               <div className="border-t pt-4 border-white/10 dark:border-gray-800/50">
                 <h3 className="font-medium mb-2">Bio</h3>
-                <p className="text-sm text-muted-foreground">{influencer.bio}</p>
+                <p className="text-sm text-muted-foreground">
+                  {influencer.bio}
+                </p>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="rounded-lg glassmorphism p-3 text-center">
                   <p className="text-xs text-muted-foreground">Followers</p>
-                  <p className="text-lg font-semibold">{formatNumber(influencer.followers)}</p>
+                  <p className="text-lg font-semibold">
+                    {formatNumber(influencer.followers)}
+                  </p>
                 </div>
                 <div className="rounded-lg glassmorphism p-3 text-center">
                   <p className="text-xs text-muted-foreground">Engagement</p>
@@ -247,7 +280,9 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                 </div>
                 <div className="rounded-lg glassmorphism p-3 text-center">
                   <p className="text-xs text-muted-foreground">Avg. Likes</p>
-                  <p className="text-lg font-semibold">{formatNumber(influencer.averageLikes)}</p>
+                  <p className="text-lg font-semibold">
+                    {formatNumber(influencer.averageLikes)}
+                  </p>
                 </div>
               </div>
 
@@ -263,8 +298,12 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                     <p className="text-sm">{influencer.audienceDemo.gender}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Top Locations</p>
-                    <p className="text-sm">{influencer.audienceDemo.topLocations.join(", ")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Top Locations
+                    </p>
+                    <p className="text-sm">
+                      {influencer.audienceDemo.topLocations.join(", ")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -294,16 +333,22 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
               >
                 Save Profile
               </Button>
-              <Button className="rounded-full bg-gradient-brand hover:opacity-90">Contact Influencer</Button>
+              <Button className="rounded-full bg-gradient-brand hover:opacity-90">
+                Contact Influencer
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
 
-        <Button variant="default" size="sm" className="w-full ml-2 rounded-full bg-gradient-brand hover:opacity-90">
+        <Button
+          variant="default"
+          size="sm"
+          className="w-full ml-2 rounded-full bg-gradient-brand hover:opacity-90"
+        >
           <MessageSquare className="mr-2 h-4 w-4" />
           Contact
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

@@ -9,7 +9,65 @@ import { CardHeader } from "../ui/card";
 import { AnimatedCard } from "../animated-card";
 import { AnimatedSection } from "../animated-section";
 import { StaggeredChildren } from "../staggered-children";
-import { BarChart3, Brain, Target, Users, Zap } from "lucide-react";
+import { BarChart3, Brain, History, Target, Users, Zap } from "lucide-react";
+import { Badge } from "../ui/badge";
+
+const features = [
+  // {
+  //   icon: Users,
+  //   title: "User Registration",
+  //   description: "Simple registration with email or phone number",
+  //   content: "Create your account in seconds and start finding the perfect influencers for your campaigns.",
+  //   isNextFeature: false,
+  // },
+  {
+    icon: Target,
+    title: "Smart Onboarding",
+    description: "Define your campaign goals and requirements",
+    content:
+      "Our intelligent onboarding process captures your specific needs to provide tailored recommendations.",
+    isNextFeature: false,
+  },
+  {
+    icon: Brain,
+    title: "AI Recommendations",
+    description: "Get matched with the most relevant KOLs",
+    content:
+      "Our AI analyzes influencer profiles and content to find the perfect match for your brand and campaign.",
+    isNextFeature: false,
+  },
+  {
+    icon: Users,
+    title: "Influencer Lists",
+    description: "Browse and filter KOLs by various criteria",
+    content:
+      "Explore our extensive database of influencers with detailed profiles and performance metrics.",
+    isNextFeature: false,
+  },
+  {
+    icon: BarChart3,
+    title: "Performance Tracking",
+    description: "Monitor campaign results and ROI",
+    content:
+      "Track the performance of your campaigns with comprehensive analytics and reporting tools.",
+    isNextFeature: true,
+  },
+  {
+    icon: Zap,
+    title: "Quick Revisions",
+    description: "Easily update your campaign parameters",
+    content:
+      "Change your requirements anytime and get updated recommendations instantly.",
+    isNextFeature: false,
+  },
+  {
+    icon: History,
+    title: "History of Campaigns",
+    description: "View the history of your campaigns",
+    content: "Track the history of your campaigns and see the results.",
+    isNextFeature: false,
+  },
+];
 
 export function FeatureSection() {
   return (
@@ -31,96 +89,25 @@ export function FeatureSection() {
           </div>
         </div>
         <StaggeredChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <Users className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>User Registration</CardTitle>
-              <CardDescription>
-                Simple registration with email or phone number
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Create your account in seconds and start finding the perfect
-                influencers for your campaigns.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <Target className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>Smart Onboarding</CardTitle>
-              <CardDescription>
-                Define your campaign goals and requirements
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Our intelligent onboarding process captures your specific needs
-                to provide tailored recommendations.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <Brain className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>AI Recommendations</CardTitle>
-              <CardDescription>
-                Get matched with the most relevant KOLs
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Our AI analyzes influencer profiles and content to find the
-                perfect match for your brand and campaign.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <Users className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>Influencer Lists</CardTitle>
-              <CardDescription>
-                Browse and filter KOLs by various criteria
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Explore our extensive database of influencers with detailed
-                profiles and performance metrics.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <BarChart3 className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>Performance Tracking</CardTitle>
-              <CardDescription>
-                Monitor campaign results and ROI
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Track the performance of your campaigns with comprehensive
-                analytics and reporting tools.
-              </p>
-            </CardContent>
-          </AnimatedCard>
-          <AnimatedCard className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10">
-            <CardHeader>
-              <Zap className="h-10 w-10 mb-2 text-primary" />
-              <CardTitle>Quick Revisions</CardTitle>
-              <CardDescription>
-                Easily update your campaign parameters
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Change your requirements anytime and get updated recommendations
-                instantly.
-              </p>
-            </CardContent>
-          </AnimatedCard>
+          {features.map((feature) => (
+            <AnimatedCard
+              key={feature.title}
+              className="glassmorphism border-white/10 dark:border-gray-800/50 hover:shadow-primary/10"
+            >
+              <CardHeader>
+                <feature.icon className="h-10 w-10 mb-2 text-primary" />
+                <CardTitle>{feature.title}</CardTitle>
+                {feature.isNextFeature && (
+                  <Badge className="absolute top-2 right-2 h-5 w-auto p-2 m-0 flex items-center justify-center bg-primary">
+                    Next Feature
+                  </Badge>
+                )}
+              </CardHeader>
+              <CardContent>
+                <p>{feature.content}</p>
+              </CardContent>
+            </AnimatedCard>
+          ))}
         </StaggeredChildren>
       </div>
     </AnimatedSection>

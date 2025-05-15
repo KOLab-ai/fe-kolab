@@ -1,15 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { DashboardHeader } from "@/components/dashboard/header"
-import { DashboardSidebar } from "@/components/dashboard/sidebar"
-import { InfluencerCard } from "@/components/dashboard/influencer-card"
-import { MetricsCard } from "@/components/dashboard/metrics-card"
-import { FilterBar } from "@/components/dashboard/filter-bar"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowUpRight, Download, Filter, RefreshCw, Save } from "lucide-react"
+import { useState } from "react";
+import { DashboardHeader } from "@/components/dashboard/header";
+import { DashboardSidebar } from "@/components/dashboard/sidebar";
+import { InfluencerCard } from "@/components/dashboard/influencer-card";
+import { MetricsCard } from "@/components/dashboard/metrics-card";
+import { FilterBar } from "@/components/dashboard/filter-bar";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ArrowUpRight, Download, Filter, RefreshCw, Save } from "lucide-react";
 
 // Mock data for influencers
 const mockInfluencers = [
@@ -169,19 +175,22 @@ const mockInfluencers = [
       video: "$5,800",
     },
   },
-]
+];
 
 export default function DashboardPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [activeFilter, setActiveFilter] = useState("all")
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
-  }
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div className="flex min-h-screen bg-muted/30">
-      <DashboardSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <DashboardSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div className="flex-1 flex flex-col">
         <DashboardHeader onMenuClick={toggleSidebar} />
@@ -191,7 +200,8 @@ export default function DashboardPage() {
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
               <p className="text-muted-foreground">
-                Welcome back! Here are your AI-powered influencer recommendations.
+                Welcome back! Here are your AI-powered influencer
+                recommendations.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -246,7 +256,8 @@ export default function DashboardPage() {
                     <div>
                       <CardTitle>Top Recommended Influencers</CardTitle>
                       <CardDescription>
-                        Based on your campaign goals, target audience, and product category.
+                        Based on your campaign goals, target audience, and
+                        product category.
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
@@ -262,11 +273,17 @@ export default function DashboardPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <FilterBar activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+                  <FilterBar
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
+                  />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {mockInfluencers.map((influencer) => (
-                      <InfluencerCard key={influencer.id} influencer={influencer} />
+                      <InfluencerCard
+                        key={influencer.id}
+                        influencer={influencer}
+                      />
                     ))}
                   </div>
 
@@ -286,11 +303,15 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Saved Influencers</CardTitle>
-                  <CardDescription>Influencers you've saved for future reference.</CardDescription>
+                  <CardDescription>
+                    Influencers you've saved for future reference.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-center h-40 border rounded-md bg-muted/50">
-                    <p className="text-muted-foreground">Switch to the "Recommendations" tab to view content</p>
+                    <p className="text-muted-foreground">
+                      Switch to the "Recommendations" tab to view content
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -299,11 +320,15 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Contacted Influencers</CardTitle>
-                  <CardDescription>Influencers you've already reached out to.</CardDescription>
+                  <CardDescription>
+                    Influencers you've already reached out to.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-center h-40 border rounded-md bg-muted/50">
-                    <p className="text-muted-foreground">Switch to the "Recommendations" tab to view content</p>
+                    <p className="text-muted-foreground">
+                      Switch to the "Recommendations" tab to view content
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -314,11 +339,15 @@ export default function DashboardPage() {
             <Card className="md:col-span-2">
               <CardHeader>
                 <CardTitle>Campaign Performance</CardTitle>
-                <CardDescription>Overview of your current campaign metrics</CardDescription>
+                <CardDescription>
+                  Overview of your current campaign metrics
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px] flex items-center justify-center border rounded-md bg-muted/50">
-                  <p className="text-muted-foreground">Campaign performance chart will appear here</p>
+                  <p className="text-muted-foreground">
+                    Campaign performance chart will appear here
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -326,7 +355,9 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest updates and notifications</CardDescription>
+                <CardDescription>
+                  Latest updates and notifications
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -334,24 +365,36 @@ export default function DashboardPage() {
                     <div className="w-2 h-2 mt-2 rounded-full bg-green-500"></div>
                     <div>
                       <p className="text-sm font-medium">New match found</p>
-                      <p className="text-xs text-muted-foreground">Sophia Martinez matches your campaign criteria</p>
-                      <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
+                      <p className="text-xs text-muted-foreground">
+                        Sophia Martinez matches your campaign criteria
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        2 hours ago
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 mt-2 rounded-full bg-blue-500"></div>
                     <div>
                       <p className="text-sm font-medium">Campaign updated</p>
-                      <p className="text-xs text-muted-foreground">Your product launch campaign was updated</p>
-                      <p className="text-xs text-muted-foreground mt-1">Yesterday</p>
+                      <p className="text-xs text-muted-foreground">
+                        Your product launch campaign was updated
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Yesterday
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 mt-2 rounded-full bg-yellow-500"></div>
                     <div>
                       <p className="text-sm font-medium">Message received</p>
-                      <p className="text-xs text-muted-foreground">Alex Johnson replied to your inquiry</p>
-                      <p className="text-xs text-muted-foreground mt-1">2 days ago</p>
+                      <p className="text-xs text-muted-foreground">
+                        Alex Johnson replied to your inquiry
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        2 days ago
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -361,5 +404,5 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

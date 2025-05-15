@@ -1,26 +1,36 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Instagram, Youtube, Twitter, Facebook, TwitterIcon as TikTok } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Instagram,
+  Youtube,
+  Twitter,
+  Facebook,
+  TwitterIcon as TikTok,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface CampaignGoalsProps {
-  formData: any
-  updateFormData: (fieldName: string, value: any) => void
-  setIsNextDisabled: (isDisabled: boolean) => void
+  formData: any;
+  updateFormData: (fieldName: string, value: any) => void;
+  setIsNextDisabled: (isDisabled: boolean) => void;
 }
 
-export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: CampaignGoalsProps) {
+export function CampaignGoals({
+  formData,
+  updateFormData,
+  setIsNextDisabled,
+}: CampaignGoalsProps) {
   // Initialize state from formData
   const [state, setState] = useState({
     goals: formData.campaignGoals || [],
     budgetRange: formData.budgetRange || "",
     timeline: formData.timeline || "",
     platforms: formData.socialPlatforms || [],
-  })
+  });
 
   const campaignGoalOptions = [
     { id: "brand-awareness", label: "Increase Brand Awareness" },
@@ -29,7 +39,7 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
     { id: "sales-conversion", label: "Sales Conversion" },
     { id: "social-engagement", label: "Social Media Engagement" },
     { id: "lead-generation", label: "Lead Generation" },
-  ]
+  ];
 
   const budgetRangeOptions = [
     { id: "under-5k", label: "Under $5,000" },
@@ -37,7 +47,7 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
     { id: "10k-25k", label: "$10,000 - $25,000" },
     { id: "25k-50k", label: "$25,000 - $50,000" },
     { id: "over-50k", label: "Over $50,000" },
-  ]
+  ];
 
   const timelineOptions = [
     { id: "less-than-1-month", label: "Less than 1 month" },
@@ -45,7 +55,7 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
     { id: "3-6-months", label: "3-6 months" },
     { id: "6-12-months", label: "6-12 months" },
     { id: "more-than-12-months", label: "More than 12 months" },
-  ]
+  ];
 
   const socialPlatforms = [
     { id: "instagram", label: "Instagram", icon: Instagram },
@@ -53,37 +63,38 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
     { id: "twitter", label: "Twitter", icon: Twitter },
     { id: "facebook", label: "Facebook", icon: Facebook },
     { id: "tiktok", label: "TikTok", icon: TikTok },
-  ]
+  ];
 
   // Single useEffect to check validity and update parent
   useEffect(() => {
     // Update parent form data
-    updateFormData("campaignGoals", state.goals)
-    updateFormData("budgetRange", state.budgetRange)
-    updateFormData("timeline", state.timeline)
-    updateFormData("socialPlatforms", state.platforms)
+    updateFormData("campaignGoals", state.goals);
+    updateFormData("budgetRange", state.budgetRange);
+    updateFormData("timeline", state.timeline);
+    updateFormData("socialPlatforms", state.platforms);
 
     // Check if form is valid
-    const isValid = state.goals.length > 0 && state.budgetRange && state.timeline
-    setIsNextDisabled(!isValid)
-  }, [state, updateFormData, setIsNextDisabled])
+    const isValid =
+      state.goals.length > 0 && state.budgetRange && state.timeline;
+    setIsNextDisabled(!isValid);
+  }, [state, updateFormData, setIsNextDisabled]);
 
   // Single handler for all state updates
   const updateState = (field: string, value: any) => {
-    setState((prev) => ({ ...prev, [field]: value }))
-  }
+    setState((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Toggle a goal selection
   const handleGoalToggle = (goalId: string, checked: boolean) => {
     if (checked) {
-      updateState("goals", [...state.goals, goalId])
+      updateState("goals", [...state.goals, goalId]);
     } else {
       updateState(
         "goals",
         state.goals.filter((id) => id !== goalId),
-      )
+      );
     }
-  }
+  };
 
   // Toggle a platform selection
   const handlePlatformToggle = (platformId: string) => {
@@ -91,11 +102,11 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
       updateState(
         "platforms",
         state.platforms.filter((id) => id !== platformId),
-      )
+      );
     } else {
-      updateState("platforms", [...state.platforms, platformId])
+      updateState("platforms", [...state.platforms, platformId]);
     }
-  }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -104,13 +115,16 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
           Campaign Goals
         </h1>
         <p className="text-muted-foreground">
-          Help us understand what you want to achieve with your influencer campaigns.
+          Help us understand what you want to achieve with your influencer
+          campaigns.
         </p>
       </div>
 
       <div className="space-y-6 mt-8">
         <div className="space-y-3">
-          <Label className="text-base font-medium">What are your primary campaign goals? (Select all that apply)</Label>
+          <Label className="text-base font-medium">
+            What are your primary campaign goals? (Select all that apply)
+          </Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {campaignGoalOptions.map((goal) => (
               <div
@@ -120,7 +134,9 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
                 <Checkbox
                   id={goal.id}
                   checked={state.goals.includes(goal.id)}
-                  onCheckedChange={(checked) => handleGoalToggle(goal.id, checked === true)}
+                  onCheckedChange={(checked) =>
+                    handleGoalToggle(goal.id, checked === true)
+                  }
                   className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <label
@@ -135,7 +151,9 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
         </div>
 
         <div className="space-y-3">
-          <Label className="text-base font-medium">What's your campaign budget range?</Label>
+          <Label className="text-base font-medium">
+            What's your campaign budget range?
+          </Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {budgetRangeOptions.map((option) => (
               <div
@@ -163,7 +181,9 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
         </div>
 
         <div className="space-y-3">
-          <Label className="text-base font-medium">What's your campaign timeline?</Label>
+          <Label className="text-base font-medium">
+            What's your campaign timeline?
+          </Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {timelineOptions.map((option) => (
               <div
@@ -191,15 +211,21 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
         </div>
 
         <div className="space-y-3">
-          <Label className="text-base font-medium">Target Social Media Platforms</Label>
+          <Label className="text-base font-medium">
+            Target Social Media Platforms
+          </Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
             {socialPlatforms.map((platform) => (
               <Button
                 key={platform.id}
                 type="button"
-                variant={state.platforms.includes(platform.id) ? "default" : "outline"}
+                variant={
+                  state.platforms.includes(platform.id) ? "default" : "outline"
+                }
                 className={`justify-start gap-2 rounded-lg transition-all ${
-                  state.platforms.includes(platform.id) ? "bg-primary hover:bg-primary/90" : "hover:border-primary/50"
+                  state.platforms.includes(platform.id)
+                    ? "bg-primary hover:bg-primary/90"
+                    : "hover:border-primary/50"
                 }`}
                 onClick={() => handlePlatformToggle(platform.id)}
               >
@@ -215,8 +241,10 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
             <Label className="text-base font-medium">Selected Platforms</Label>
             <div className="flex flex-wrap gap-2">
               {state.platforms.map((platformId) => {
-                const platform = socialPlatforms.find((p) => p.id === platformId)
-                if (!platform) return null
+                const platform = socialPlatforms.find(
+                  (p) => p.id === platformId,
+                );
+                if (!platform) return null;
                 return (
                   <Badge
                     key={platformId}
@@ -234,12 +262,12 @@ export function CampaignGoals({ formData, updateFormData, setIsNextDisabled }: C
                       <span className="text-xs">×</span>
                     </button>
                   </Badge>
-                )
+                );
               })}
             </div>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
