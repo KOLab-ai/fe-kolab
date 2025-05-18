@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DashboardHeader } from "@/components/dashboard/header";
-import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { InfluencerCard } from "@/components/dashboard/influencer-card";
 import { MetricsCard } from "@/components/dashboard/metrics-card";
 import { FilterBar } from "@/components/dashboard/filter-bar";

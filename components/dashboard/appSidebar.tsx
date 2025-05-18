@@ -7,9 +7,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import {
-  Brain,
-} from "lucide-react";
+import { Brain } from "lucide-react";
 import { Home, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -52,16 +50,16 @@ export function AppSidebar() {
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-primary/10 hover:text-primary",
+                  "group flex items-center rounded-lg mt-2 px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-primary/10 hover:text-primary",
                   route.active
                     ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 <route.icon
                   className={cn(
                     "mr-3 h-5 w-5 transition-transform group-hover:scale-110",
-                    route.active ? "text-primary" : "text-muted-foreground"
+                    route.active ? "text-primary" : "text-muted-foreground",
                   )}
                 />
                 <span>{route.label}</span>

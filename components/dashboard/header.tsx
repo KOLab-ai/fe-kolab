@@ -17,8 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 
 export function DashboardHeader() {
-  const { toggleSidebar } = useSidebar()
-  
+  const { toggleSidebar } = useSidebar();
+
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md glassmorphism border-b border-white/10 dark:border-gray-800/50 px-4 md:px-6">
       <div className="flex h-16 items-center gap-4 justify-between">

@@ -9,15 +9,12 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
         <DashboardHeader />
-        <div className="flex min-h-screen bg-muted/30 w-full">
-        {children}
-        </div>
+        <div className="flex min-h-screen bg-muted/30 w-full">{children}</div>
       </main>
     </SidebarProvider>
   );
