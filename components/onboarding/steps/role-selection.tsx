@@ -67,20 +67,11 @@ export function RoleSelection({
         </Card>
 
         <Card
-          className={`cursor-pointer hover:shadow-md transition-all duration-300 ${
-            selectedRole === "creator"
-              ? "border-primary bg-primary/5 shadow-md"
-              : "hover:border-primary/50"
-          }`}
-          onClick={() => handleRoleClick("creator")}
+          className={`cursor-not-allowed opacity-50 transition-all duration-300`}
         >
           <CardContent className="p-6 flex flex-col items-center text-center">
             <div
-              className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all duration-300 ${
-                selectedRole === "creator"
-                  ? "bg-gradient-to-r from-primary to-pink-500 text-white"
-                  : "bg-muted"
-              }`}
+              className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-muted"
             >
               <Users size={32} />
             </div>
@@ -89,6 +80,7 @@ export function RoleSelection({
               I'm a content creator looking to collaborate with brands that
               match my audience and style.
             </p>
+            <p className="text-sm text-red-500 mt-2">Currently Unavailable</p>
           </CardContent>
         </Card>
       </div>

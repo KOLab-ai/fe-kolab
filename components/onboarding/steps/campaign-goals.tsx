@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface CampaignGoalsProps {
   formData: any;
@@ -42,11 +43,11 @@ export function CampaignGoals({
   ];
 
   const budgetRangeOptions = [
-    { id: "under-5k", label: "Under $5,000" },
-    { id: "5k-10k", label: "5,000 - $10,000" },
-    { id: "10k-25k", label: "$10,000 - $25,000" },
-    { id: "25k-50k", label: "$25,000 - $50,000" },
-    { id: "over-50k", label: "Over $50,000" },
+    { id: "under-5k", label: "Under Rp5,000,000" },
+    { id: "5k-10k", label: "Rp5,000,000 - Rp10,000,000" },
+    { id: "10k-25k", label: "Rp10,000,000 - Rp25,000,000" },
+    { id: "25k-50k", label: "Rp25,000,000 - Rp50,000,000" },
+    { id: "over-50k", label: "Over Rp50,000,000" },
   ];
 
   const timelineOptions = [
@@ -154,20 +155,20 @@ export function CampaignGoals({
           <Label className="text-base font-medium">
             What's your campaign budget range?
           </Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <RadioGroup
+            value={state.budgetRange}
+            onValueChange={(value) => updateState("budgetRange", value)}
+            className="grid grid-cols-1 md:grid-cols-2 gap-3"
+          >
             {budgetRangeOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-center space-x-2 rounded-lg p-2 hover:bg-muted/50 transition-colors"
               >
-                <input
-                  type="radio"
-                  id={`budget-${option.id}`}
-                  name="budgetRange"
+                <RadioGroupItem
                   value={option.id}
-                  checked={state.budgetRange === option.id}
-                  onChange={() => updateState("budgetRange", option.id)}
-                  className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
+                  id={`budget-${option.id}`}
+                  className="text-primary border-muted-foreground/50"
                 />
                 <label
                   htmlFor={`budget-${option.id}`}
@@ -177,27 +178,27 @@ export function CampaignGoals({
                 </label>
               </div>
             ))}
-          </div>
+          </RadioGroup>
         </div>
 
         <div className="space-y-3">
           <Label className="text-base font-medium">
             What's your campaign timeline?
           </Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <RadioGroup
+            value={state.timeline}
+            onValueChange={(value) => updateState("timeline", value)}
+            className="grid grid-cols-1 md:grid-cols-2 gap-3"
+          >
             {timelineOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-center space-x-2 rounded-lg p-2 hover:bg-muted/50 transition-colors"
               >
-                <input
-                  type="radio"
-                  id={`timeline-${option.id}`}
-                  name="timeline"
+                <RadioGroupItem
                   value={option.id}
-                  checked={state.timeline === option.id}
-                  onChange={() => updateState("timeline", option.id)}
-                  className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
+                  id={`timeline-${option.id}`}
+                  className="text-primary border-muted-foreground/50"
                 />
                 <label
                   htmlFor={`timeline-${option.id}`}
@@ -207,7 +208,7 @@ export function CampaignGoals({
                 </label>
               </div>
             ))}
-          </div>
+          </RadioGroup>
         </div>
 
         <div className="space-y-3">

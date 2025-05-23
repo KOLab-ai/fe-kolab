@@ -7,7 +7,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { Brain } from "lucide-react";
+import { Brain, BriefcaseIcon } from "lucide-react";
 import { Home, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,6 +27,12 @@ export function AppSidebar() {
       icon: Users,
       href: "/dashboard/influencers",
       active: pathname === "/dashboard/influencers",
+    },
+    {
+      label: "Campaigns",
+      icon: BriefcaseIcon,
+      href: "/dashboard/campaigns",
+      active: pathname === "/dashboard/campaigns",
     },
   ];
 

@@ -187,7 +187,7 @@ export default function DashboardPage() {
             Welcome back! Here are your AI-powered influencer recommendations.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="h-9">
             <Save className="mr-2 h-4 w-4" />
             Save Report
@@ -196,7 +196,7 @@ export default function DashboardPage() {
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh Recommendations
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

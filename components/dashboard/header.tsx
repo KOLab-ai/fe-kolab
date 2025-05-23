@@ -15,9 +15,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger, useSidebar } from "../ui/sidebar";
+import { useRouter } from "next/navigation";
 
 export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md glassmorphism border-b border-white/10 dark:border-gray-800/50 px-4 md:px-6">
@@ -36,18 +38,18 @@ export function DashboardHeader() {
 
         <div className="w-full flex justify-between items-center gap-4 md:gap-8">
           <form className="hidden md:flex-1 md:flex max-w-sm">
-            <div className="relative w-full">
+            {/* <div className="relative w-full">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search influencers, campaigns..."
                 className="w-full bg-background/50 pl-8 md:w-[300px] border-white/20 dark:border-gray-800/70 rounded-full"
               />
-            </div>
+            </div> */}
           </form>
 
           <div className="flex items-center gap-3">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="relative rounded-full bg-background/50 hover:bg-background/80"
@@ -69,15 +71,16 @@ export function DashboardHeader() {
                 5
               </Badge>
               <span className="sr-only">Notifications</span>
-            </Button>
+            </Button> */}
 
             <Button
-              variant="ghost"
-              size="icon"
-              className="relative rounded-full bg-background/50 hover:bg-background/80"
+              variant="outline"
+              size="sm"
+              className="rounded-full w-auto"
+              onClick={() => router.push("/onboarding")}
             >
               <Plus className="h-5 w-5" />
-              <span className="sr-only">Create New</span>
+              <p className="">Create</p>
             </Button>
 
             <ThemeToggle />
@@ -104,12 +107,12 @@ export function DashboardHeader() {
                 align="end"
                 className="glassmorphism border-white/10 dark:border-gray-800/50"
               >
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator /> */}
                 <DropdownMenuItem>Log out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -17,44 +17,38 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
-import Image from "next/image";
 
 // Import dummy data
-import dummyData from "@/data/csvjson.json";
+import dummyData from "@/data/influencers_sample_20.json";
 import { Badge } from "@/components/ui/badge";
-
-interface RateCard {
-  title: string
-  price: number
-}
 
 // Interface untuk data influencer
 interface SocialPlatform {
-  platform: string
-  profile_url: string
-  username: string
-  followers: number
-  rate_cards: RateCard[]
-  engagement_rate?: string
-  avg_likes_per_post?: string
-  avg_comments_per_post?: string
-  avg_views_per_post?: string
+  platform: string;
+  profile_url: string;
+  username: string;
+  followers: number;
+  rate_cards: {
+    title: string;
+    price: number;
+  }[];
+  engagement_rate?: string;
+  avg_likes_per_post?: string;
+  avg_comments_per_post?: string;
+  avg_views_per_post?: string;
 }
 
 interface Influencer {
-  slug: string
-  full_name: string
-  profile_picture_url: string
-  domicile: string
-  description: any
-  email: string
-  phone: any
-  address: string | null
-  categories: string[]
-  social_platforms: SocialPlatform[]
-  source_url: string
+  full_name: string;
+  domicile: string;
+  description: string;
+  email: string;
+  phone: string;
+  address: string | null;
+  categories: string[];
+  social_platforms: SocialPlatform[];
+  source_url: string;
 }
 
 // Transform the data to ensure address is always string | null
@@ -114,21 +108,11 @@ export default function InfluencersPage() {
               {currentItems.map((influencer, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden">
-                        <Image
-                          src={influencer.profile_picture_url}
-                          alt={influencer.full_name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <span>{influencer.full_name}</span>
-                        <span className="text-sm text-muted-foreground">
-                          {influencer.social_platforms[0]?.username}
-                        </span>
-                      </div>
+                    <div className="flex flex-col">
+                      <span>{influencer.full_name}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {influencer.social_platforms[0]?.username}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>{influencer.domicile}</TableCell>
@@ -190,33 +174,8 @@ export default function InfluencersPage() {
                     }
                   />
                 </PaginationItem>
-                
-                {/* First page */}
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => handlePageChange(1)}
-                    isActive={currentPage === 1}
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-
-                {/* Left ellipsis */}
-                {currentPage > 3 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-
-                {/* Pages around current page */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(
-                    (page) =>
-                      page !== 1 &&
-                      page !== totalPages &&
-                      Math.abs(page - currentPage) <= 1
-                  )
-                  .map((page) => (
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
@@ -225,27 +184,8 @@ export default function InfluencersPage() {
                         {page}
                       </PaginationLink>
                     </PaginationItem>
-                  ))}
-
-                {/* Right ellipsis */}
-                {currentPage < totalPages - 2 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
+                  ),
                 )}
-
-                {/* Last page */}
-                {totalPages > 1 && (
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => handlePageChange(totalPages)}
-                      isActive={currentPage === totalPages}
-                    >
-                      {totalPages}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => handlePageChange(currentPage + 1)}

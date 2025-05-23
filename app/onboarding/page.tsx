@@ -44,6 +44,7 @@ export default function OnboardingPage() {
     productCategory: "",
     productDescription: "",
   });
+
   const [isNextDisabled, setIsNextDisabled] = useState(true);
 
   // Calculate progress percentage correctly based on the current step
