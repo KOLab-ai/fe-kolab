@@ -20,10 +20,17 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { SocialIcon } from "react-social-icons";
 
 // Import dummy data
 import dummyData from "@/data/csvjson.json";
-import { Badge } from "@/components/ui/badge";
 
 interface RateCard {
   title: string
@@ -134,7 +141,7 @@ export default function InfluencersPage() {
                   <TableCell>{influencer.domicile}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {influencer.categories.map((category, idx) => (
+                      {influencer.categories.slice(0, 5).map((category, idx) => (
                         <Badge
                           key={category}
                           variant="secondary"
@@ -143,6 +150,33 @@ export default function InfluencersPage() {
                           {category}
                         </Badge>
                       ))}
+                      {influencer.categories.length > 5 && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20 cursor-help"
+                              >
+                                +{influencer.categories.length - 5}
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[300px] p-3">
+                              <div className="flex flex-wrap gap-1.5">
+                                {influencer.categories.slice(5).map((category) => (
+                                  <Badge
+                                    key={category}
+                                    variant="secondary"
+                                    className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20"
+                                  >
+                                    {category}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -158,14 +192,27 @@ export default function InfluencersPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      {influencer.social_platforms.map((platform, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-1 text-xs bg-primary/10 rounded-full"
-                        >
-                          {platform.platform}
-                        </span>
-                      ))}
+                      {influencer.social_platforms.map((platform, idx) => {
+                        const network = platform.platform.toLowerCase();
+                        return (
+                          <TooltipProvider key={idx}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="cursor-help">
+                                  <SocialIcon
+                                    network={network}
+                                    style={{ height: 32, width: 32 }}
+                                    className="hover:opacity-80 transition-opacity"
+                                  />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">{`@${platform.username}`}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        );
+                      })}
                     </div>
                   </TableCell>
                 </TableRow>
