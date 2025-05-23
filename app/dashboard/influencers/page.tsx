@@ -141,7 +141,7 @@ export default function InfluencersPage() {
                   <TableCell>{influencer.domicile}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {influencer.categories.slice(0, 5).map((category, idx) => (
+                      {influencer.categories.slice(0, 3).map((category, idx) => (
                         <Badge
                           key={category}
                           variant="secondary"
@@ -150,7 +150,7 @@ export default function InfluencersPage() {
                           {category}
                         </Badge>
                       ))}
-                      {influencer.categories.length > 5 && (
+                      {influencer.categories.length > 3 && (
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -158,12 +158,12 @@ export default function InfluencersPage() {
                                 variant="secondary"
                                 className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20 cursor-help"
                               >
-                                +{influencer.categories.length - 5}
+                                +{influencer.categories.length - 3}
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-[300px] p-3">
                               <div className="flex flex-wrap gap-1.5">
-                                {influencer.categories.slice(5).map((category) => (
+                                {influencer.categories.slice(3).map((category) => (
                                   <Badge
                                     key={category}
                                     variant="secondary"
