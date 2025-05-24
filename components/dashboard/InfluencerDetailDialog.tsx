@@ -275,10 +275,10 @@ export default function InfluencerDetailDialog({
           >
             Save Profile
           </Button>
-          <Button className="rounded-full bg-gradient-brand hover:opacity-90">
+          {/* <Button className="rounded-full bg-gradient-brand hover:opacity-90">
             <MessageSquare className="mr-2 h-4 w-4" />
             Contact Influencer
-          </Button>
+          </Button> */}
         </div>
       </DialogContent>
     </Dialog>

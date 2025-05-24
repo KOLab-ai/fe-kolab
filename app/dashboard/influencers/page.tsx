@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TableBody,
   TableRow,
@@ -67,6 +67,13 @@ interface Influencer {
   source_url: string
 }
 
+interface ApiResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Influencer[];
+}
+
 // Transform the data to ensure address is always string | null
 const transformedData: Influencer[] = dummyData.map((influencer) => ({
   ...influencer,
@@ -75,15 +82,10 @@ const transformedData: Influencer[] = dummyData.map((influencer) => ({
 
 export default function InfluencersPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Number of items to show per page
-  const [influencers] = useState<Influencer[]>(transformedData);
+  const [totalItems, setTotalItems] = useState(0);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(influencers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = influencers.slice(startIndex, endIndex);
+  const [influencers, setInfluencers] = useState<Influencer[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to get the highest follower count across all platforms
   const getHighestFollowers = (platforms: SocialPlatform[]) => {
@@ -101,7 +103,46 @@ export default function InfluencersPage() {
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    getInfluencers(page);
   };
+
+  const getInfluencers = async (page: number = 1) => {
+    try {
+      setIsLoading(true);
+      const cookieString = document.cookie;
+      const cookieArray = cookieString.split('; ');
+      const myCookie = cookieArray.find(row => row.startsWith('token='));
+      const token = myCookie?.split('=')[1];
+      
+      const headers = {
+        "Authorization": `Bearer ${token}`
+      }
+      const response = await fetch(`https://pc.cat-anoles.ts.net/api/v1/influencers/?page=${page}`, { headers });
+      const data: ApiResponse = await response.json();
+      
+      const listInfluencers = data.results.map((influencer: any) => ({
+        ...influencer,
+        profile_picture_url: influencer.profile_picture_url || influencer.profile_picture || "/placeholder.svg?height=32&width=32",
+        domicile: influencer.domicile || "Unknown",
+        categories: influencer.categories || [],
+        social_platforms: influencer.social_platforms || [],
+      }));
+
+      setInfluencers(listInfluencers);
+      setTotalItems(data.count);
+    } catch (error) {
+      console.error("Error fetching influencers:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getInfluencers(1);
+  }, []);
+
+  // Calculate total pages based on API response
+  const totalPages = Math.ceil(totalItems / 10); // Assuming 10 items per page from API
 
   return (
     <div className="w-full p-4">
@@ -124,114 +165,128 @@ export default function InfluencersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentItems.map((influencer, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden">
-                          <Image
-                            src={influencer.profile_picture_url}
-                            alt={influencer.full_name}
-                            fill
-                            className="object-cover"
-                          />
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : influencers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      No influencers found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  influencers.map((influencer: Influencer, index: number) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                            <Image
+                              src={influencer.profile_picture_url}
+                              alt={influencer.full_name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="line-clamp-1">{influencer.full_name}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {influencer.social_platforms[0]?.username}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="line-clamp-1">{influencer.full_name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {influencer.social_platforms[0]?.username}
-                          </span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{influencer.domicile}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {influencer.categories.slice(0, 3).map((category, idx) => (
-                          <Badge
-                            key={category}
-                            variant="secondary"
-                            className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20"
-                          >
-                            {category}
-                          </Badge>
-                        ))}
-                        {influencer.categories.length > 3 && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Badge
-                                  variant="secondary"
-                                  className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20 cursor-help"
-                                >
-                                  +{influencer.categories.length - 3}
-                                </Badge>
-                              </TooltipTrigger>
-                              <TooltipContent className="max-w-[300px] p-3">
-                                <div className="flex flex-wrap gap-1.5">
-                                  {influencer.categories.slice(3).map((category) => (
-                                    <Badge
-                                      key={category}
-                                      variant="secondary"
-                                      className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20"
-                                    >
-                                      {category}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {getHighestFollowers(
-                        influencer.social_platforms,
-                      ).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      {getHighestEngagementRate(
-                        influencer.social_platforms,
-                      ).toFixed(2)}
-                      %
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        {influencer.social_platforms.map((platform, idx) => {
-                          const network = platform.platform.toLowerCase();
-                          return (
-                            <TooltipProvider key={idx}>
+                      </TableCell>
+                      <TableCell>{influencer.domicile}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {influencer.categories.slice(0, 3).map((category: string, idx: number) => (
+                            <Badge
+                              key={category}
+                              variant="secondary"
+                              className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20"
+                            >
+                              {category}
+                            </Badge>
+                          ))}
+                          {influencer.categories.length > 3 && (
+                            <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <div className="cursor-help">
-                                    <SocialIcon
-                                      network={network}
-                                      style={{ height: 32, width: 32 }}
-                                      className="hover:opacity-80 transition-opacity"
-                                    />
-                                  </div>
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20 cursor-help"
+                                  >
+                                    +{influencer.categories.length - 3}
+                                  </Badge>
                                 </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="text-sm">{`@${platform.username}`}</p>
+                                <TooltipContent className="max-w-[300px] p-3">
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {influencer.categories.slice(3).map((category: string) => (
+                                      <Badge
+                                        key={category}
+                                        variant="secondary"
+                                        className="text-xs bg-secondary/10 hover:bg-secondary/20 text-secondary border-secondary/20"
+                                      >
+                                        {category}
+                                      </Badge>
+                                    ))}
+                                  </div>
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
-                          );
-                        })}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSelectedInfluencer(influencer)}
-                      >
-                        <Info className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {getHighestFollowers(
+                          influencer.social_platforms,
+                        ).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        {getHighestEngagementRate(
+                          influencer.social_platforms,
+                        ).toFixed(2)}
+                        %
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          {influencer.social_platforms.map((platform: SocialPlatform, idx: number) => {
+                            const network = platform.platform.toLowerCase();
+                            return (
+                              <TooltipProvider key={idx}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="cursor-help">
+                                      <SocialIcon
+                                        network={network}
+                                        style={{ height: 32, width: 32 }}
+                                        className="hover:opacity-80 transition-opacity"
+                                      />
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-sm">{`@${platform.username}`}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            );
+                          })}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setSelectedInfluencer(influencer)}
+                        >
+                          <Info className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -239,8 +294,8 @@ export default function InfluencersPage() {
           {/* Pagination */}
           <div className="flex items-center justify-between p-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Showing {startIndex + 1} to{" "}
-              {Math.min(endIndex, influencers.length)} of {influencers.length}{" "}
+              Showing {((currentPage - 1) * 10) + 1} to{" "}
+              {Math.min(currentPage * 10, totalItems)} of {totalItems}{" "}
               entries
             </div>
             <Pagination>
