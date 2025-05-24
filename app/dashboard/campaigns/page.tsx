@@ -122,108 +122,110 @@ export default function CampaignPage() {
   };
 
   return (
-    <div className="p-4">
-      <Card>
+    <div className="w-full p-4">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Campaign List</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[200px]">Campaign Details</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>Goals & Platforms</TableHead>
-                <TableHead>Target Audience</TableHead>
-                <TableHead>Budget & Timeline</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentItems.map((campaign) => (
-                <TableRow key={campaign.id}>
-                  <TableCell className="font-medium">
-                    <div className="flex flex-col">
-                      <span>{campaign.productDescription}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {campaign.productCategory}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        Created: {new Date(campaign.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span>{campaign.company}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {campaign.position}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex flex-wrap gap-1">
-                        {campaign.campaignGoals.map((goal, idx) => (
-                          <Badge
-                            key={idx}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {goal}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {campaign.socialPlatforms.map((platform, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-1 text-xs bg-primary/10 rounded-full"
-                          >
-                            {platform}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <div className="text-sm">
-                        <span className="font-medium">Age:</span>{" "}
-                        {campaign.targetAgeRange.join(", ")}
-                      </div>
-                      <div className="text-sm">
-                        <span className="font-medium">Gender:</span>{" "}
-                        {campaign.targetGender.join(", ")}
-                      </div>
-                      <div className="text-sm">
-                        <span className="font-medium">Location:</span>{" "}
-                        {campaign.targetLocations.join(", ")}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">Budget:</span>
-                      <span className="text-sm">{campaign.budgetRange}</span>
-                      <span className="font-medium mt-1">Timeline:</span>
-                      <span className="text-sm">{campaign.timeline}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`${getStatusColor(campaign.status)} capitalize`}
-                    >
-                      {campaign.status}
-                    </Badge>
-                  </TableCell>
+        <CardContent className="p-0">
+          <div className="w-full overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[25%]">Campaign Details</TableHead>
+                  <TableHead className="w-[15%]">Company</TableHead>
+                  <TableHead className="w-[20%]">Goals & Platforms</TableHead>
+                  <TableHead className="w-[20%]">Target Audience</TableHead>
+                  <TableHead className="w-[15%]">Budget & Timeline</TableHead>
+                  <TableHead className="w-[5%]">Status</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentItems.map((campaign) => (
+                  <TableRow key={campaign.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                        <span className="line-clamp-1">{campaign.productDescription}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {campaign.productCategory}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          Created: {new Date(campaign.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="line-clamp-1">{campaign.company}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {campaign.position}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex flex-wrap gap-1">
+                          {campaign.campaignGoals.map((goal, idx) => (
+                            <Badge
+                              key={idx}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {goal}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {campaign.socialPlatforms.map((platform, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-1 text-xs bg-primary/10 rounded-full"
+                            >
+                              {platform}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <div className="text-sm">
+                          <span className="font-medium">Age:</span>{" "}
+                          {campaign.targetAgeRange.join(", ")}
+                        </div>
+                        <div className="text-sm">
+                          <span className="font-medium">Gender:</span>{" "}
+                          {campaign.targetGender.join(", ")}
+                        </div>
+                        <div className="text-sm">
+                          <span className="font-medium">Location:</span>{" "}
+                          {campaign.targetLocations.join(", ")}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Budget:</span>
+                        <span className="text-sm">{campaign.budgetRange}</span>
+                        <span className="font-medium mt-1">Timeline:</span>
+                        <span className="text-sm">{campaign.timeline}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`${getStatusColor(campaign.status)} capitalize`}
+                      >
+                        {campaign.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between p-4 border-t">
             <div className="text-sm text-muted-foreground">
               Showing {startIndex + 1} to{" "}
               {Math.min(endIndex, campaigns.length)} of {campaigns.length}{" "}
