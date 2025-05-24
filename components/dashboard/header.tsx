@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { deleteCookie } from "cookies-next";
 
 interface User {
   id: number;
@@ -41,8 +42,9 @@ export function DashboardHeader() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+    deleteCookie('access_token'); 
+    deleteCookie('refresh_token');
     router.push('/auth/login');
   };
 

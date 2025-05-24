@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { setCookie } from 'cookies-next';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -47,8 +48,8 @@ export default function RegisterPage() {
 
       if (data.success) {
         // Store both access and refresh tokens in cookies
-        document.cookie = `access_token=${data.tokens.access}; path=/; max-age=2592000`; // 30 days
-        document.cookie = `refresh_token=${data.tokens.refresh}; path=/; max-age=2592000`; // 30 days
+        setCookie('access_token', data.tokens.access, { path: '/', maxAge: 2592000 }); // 30 days
+        setCookie('refresh_token', data.tokens.refresh, { path: '/', maxAge: 2592000 }); // 30 days
         
         // Store user data in localStorage if needed
         localStorage.setItem('user', JSON.stringify(data.user));

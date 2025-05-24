@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Separator } from "@/components/ui/separator";
+import { setCookie } from 'cookies-next';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,8 +41,9 @@ export default function LoginPage() {
       }
 
       // Store both access and refresh tokens in cookies
-      document.cookie = `access_token=${data.access}; path=/; max-age=2592000`; // 30 days
-      document.cookie = `refresh_token=${data.refresh}; path=/; max-age=2592000`; // 30 days
+
+      setCookie('access_token', data.access, { path: '/', maxAge: 2592000 }); // 30 days
+      setCookie('refresh_token', data.refresh, { path: '/', maxAge: 2592000 }); // 30 days
       
       // Redirect to dashboard
       router.push("/dashboard");
@@ -151,12 +153,12 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link
+                {/* <Link
                   href="/auth/forgot-password"
                   className="text-sm text-primary hover:underline"
                 >
                   Forgot password?
-                </Link>
+                </Link> */}
               </div>
               <Input
                 id="password"

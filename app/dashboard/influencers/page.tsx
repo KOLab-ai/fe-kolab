@@ -31,6 +31,7 @@ import { SocialIcon } from "react-social-icons";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import InfluencerDetailDialog from "../../../components/dashboard/InfluencerDetailDialog";
+import { getCookie } from 'cookies-next';
 
 // Import dummy data
 import dummyData from "@/data/csvjson.json";
@@ -109,10 +110,8 @@ export default function InfluencersPage() {
   const getInfluencers = async (page: number = 1) => {
     try {
       setIsLoading(true);
-      const cookieString = document.cookie;
-      const cookieArray = cookieString.split('; ');
-      const myCookie = cookieArray.find(row => row.startsWith('token='));
-      const token = myCookie?.split('=')[1];
+      const token = getCookie('access_token');
+      console.log("🚀 ~ getInfluencers ~ token:", token)
       
       const headers = {
         "Authorization": `Bearer ${token}`
