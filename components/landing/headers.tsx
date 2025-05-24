@@ -1,17 +1,46 @@
+"use client";
+
 import { Brain } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ThemeToggle } from "../theme-toggle";
 import { Button } from "../ui/button";
 
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  date_joined: string;
+}
+
 export function Headers() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    router.push('/');
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full glassmorphism backdrop-blur-lg border-b border-white/10 dark:border-gray-800/50">
       <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Brain className="h-6 w-6 text-primary" />
           <span className="text-xl font-bold text-gradient">KOLab.ai</span>
-        </div>
+        </Link>
         <nav className="hidden md:flex gap-6">
           <Link
             href="#features"
@@ -40,19 +69,43 @@ export function Headers() {
         </nav>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Button
-            variant="outline"
-            size="sm"
-            className="transition-all duration-300 hover:border-primary rounded-full border-white/20 dark:border-gray-800/50"
-          >
-            Log in
-          </Button>
-          <Button
-            size="sm"
-            className="transition-all duration-300 hover:opacity-90 hover:scale-105 bg-gradient-brand rounded-full"
-          >
-            Sign up
-          </Button>
+          {user ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="transition-all duration-300 hover:border-primary rounded-full border-white/20 dark:border-gray-800/50"
+                onClick={() => router.push('/dashboard')}
+              >
+                Dashboard
+              </Button>
+              <Button
+                size="sm"
+                className="transition-all duration-300 hover:opacity-90 hover:scale-105 bg-gradient-brand rounded-full"
+                onClick={handleLogout}
+              >
+                Log out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="transition-all duration-300 hover:border-primary rounded-full border-white/20 dark:border-gray-800/50"
+                onClick={() => router.push('/auth/login')}
+              >
+                Log in
+              </Button>
+              <Button
+                size="sm"
+                className="transition-all duration-300 hover:opacity-90 hover:scale-105 bg-gradient-brand rounded-full"
+                onClick={() => router.push('/auth/register')}
+              >
+                Sign up
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

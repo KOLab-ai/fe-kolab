@@ -15,14 +15,48 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BE_API}/login/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Store both access and refresh tokens in cookies
+      document.cookie = `access_token=${data.access}; path=/; max-age=2592000`; // 30 days
+      document.cookie = `refresh_token=${data.refresh}; path=/; max-age=2592000`; // 30 days
+      
+      // Redirect to dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(error instanceof Error ? error.message : "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // TODO: Implement login logic here
-    
-    setIsLoading(false);
+    setError("");
+    await handleLogin();
   };
 
   const handleGoogleSignIn = async () => {
@@ -59,7 +93,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full transition-all duration-300 hover:border-primary rounded-full"
@@ -82,9 +116,9 @@ export default function LoginPage() {
               ></path>
             </svg>
             {isGoogleLoading ? "Signing in..." : "Continue with Google"}
-          </Button>
+          </Button> */}
 
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full" />
             </div>
@@ -93,17 +127,23 @@ export default function LoginPage() {
                 Or continue with
               </span>
             </div>
-          </div>
+          </div> */}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                {error}
+              </div>
+            )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
                 required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
               />
             </div>
@@ -124,6 +164,8 @@ export default function LoginPage() {
                 type="password"
                 placeholder="Enter your password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
               />
             </div>
@@ -133,7 +175,14 @@ export default function LoginPage() {
               className="w-full transition-all duration-300 hover:opacity-90 hover:scale-105 bg-gradient-brand rounded-full"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  Signing in...
+                </div>
+              ) : (
+                "Sign in"
+              )}
             </Button>
           </form>
 

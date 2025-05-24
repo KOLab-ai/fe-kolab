@@ -15,21 +15,68 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+
+  const handleRegister = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BE_API}/register/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password,
+          password_confirm: confirmPassword,
+        }), 
+      });
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      if (data.success) {
+        // Store both access and refresh tokens in cookies
+        document.cookie = `access_token=${data.tokens.access}; path=/; max-age=2592000`; // 30 days
+        document.cookie = `refresh_token=${data.tokens.refresh}; path=/; max-age=2592000`; // 30 days
+        
+        // Store user data in localStorage if needed
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Redirect to dashboard
+        router.push("/dashboard");
+      } else {
+        throw new Error(data.message || "Registration failed");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError(error instanceof Error ? error.message : "Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPasswordError("");
+    setError("");
 
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match");
       return;
     }
 
-    setIsLoading(true);
-    
-    // TODO: Implement registration logic here
-    
-    setIsLoading(false);
+    await handleRegister();
   };
 
   return (
@@ -55,14 +102,50 @@ export default function RegisterPage() {
             </p>
           </div>
 
+          {error && (
+            <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  placeholder="Enter your first name"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Enter your last name"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="name"
-                name="name"
-                placeholder="Enter your full name"
+                id="username"
+                name="username"
+                placeholder="Choose a username"
                 required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
               />
             </div>
@@ -75,6 +158,8 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Enter your email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="transition-all duration-200 focus-visible:ring-primary rounded-lg"
               />
             </div>
@@ -115,7 +200,14 @@ export default function RegisterPage() {
               className="w-full transition-all duration-300 hover:opacity-90 hover:scale-105 bg-gradient-brand rounded-full"
               disabled={isLoading}
             >
-              {isLoading ? "Creating account..." : "Create account"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  Creating account...
+                </div>
+              ) : (
+                "Create account"
+              )}
             </Button>
           </form>
 

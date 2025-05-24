@@ -117,7 +117,7 @@ export default function InfluencersPage() {
       const headers = {
         "Authorization": `Bearer ${token}`
       }
-      const response = await fetch(`https://pc.cat-anoles.ts.net/api/v1/influencers/?page=${page}`, { headers });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BE_API}/influencers/?page=${page}`, { headers });
       const data: ApiResponse = await response.json();
       
       const listInfluencers = data.results.map((influencer: any) => ({

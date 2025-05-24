@@ -16,10 +16,40 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  date_joined: string;
+}
 
 export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    router.push('/auth/login');
+  };
+
+  const getUserInitials = () => {
+    if (!user) return 'JD';
+    return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md glassmorphism border-b border-white/10 dark:border-gray-800/50 px-4 md:px-6">
@@ -95,10 +125,10 @@ export function DashboardHeader() {
                   <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                     <AvatarImage
                       src="/placeholder.svg?height=32&width=32"
-                      alt="User"
+                      alt={user?.username || "User"}
                     />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      JD
+                      {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -107,13 +137,14 @@ export function DashboardHeader() {
                 align="end"
                 className="glassmorphism border-white/10 dark:border-gray-800/50"
               >
-                {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.first_name} {user?.last_name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuSeparator /> */}
-                <DropdownMenuItem>Log out</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
