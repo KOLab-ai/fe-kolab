@@ -28,6 +28,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SocialIcon } from "react-social-icons";
+import { Button } from "@/components/ui/button";
+import { Info } from "lucide-react";
+import InfluencerDetailDialog from "../../../components/dashboard/InfluencerDetailDialog";
 
 // Import dummy data
 import dummyData from "@/data/csvjson.json";
@@ -74,6 +77,7 @@ export default function InfluencersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to show per page
   const [influencers] = useState<Influencer[]>(transformedData);
+  const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
 
   // Calculate pagination
   const totalPages = Math.ceil(influencers.length / itemsPerPage);
@@ -116,6 +120,7 @@ export default function InfluencersPage() {
                   <TableHead className="w-[15%]">Followers</TableHead>
                   <TableHead className="w-[15%]">Engagement Rate</TableHead>
                   <TableHead className="w-[10%]">Platforms</TableHead>
+                  <TableHead className="w-[5%]">Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -216,6 +221,15 @@ export default function InfluencersPage() {
                         })}
                       </div>
                     </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSelectedInfluencer(influencer)}
+                      >
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -310,6 +324,14 @@ export default function InfluencersPage() {
           </div>
         </CardContent>
       </Card>
+
+      {selectedInfluencer && (
+        <InfluencerDetailDialog
+          influencer={selectedInfluencer}
+          open={!!selectedInfluencer}
+          onOpenChange={(open) => !open && setSelectedInfluencer(null)}
+        />
+      )}
     </div>
   );
 }
