@@ -45,7 +45,7 @@ export function HeroSection() {
           <div className="flex justify-center">
             <div className="relative w-full max-w-[500px] aspect-video rounded-xl overflow-hidden shadow-xl glassmorphism transition-all duration-700 hover:shadow-2xl transform hover:-rotate-1 animate-float">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/kolab-ai-image-hero.png"
                 alt="KOLab.ai platform preview"
                 className="object-cover w-full h-full"
               />
