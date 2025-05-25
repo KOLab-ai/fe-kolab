@@ -14,9 +14,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+interface FormData {
+  role: string;
+  fullName: string;
+  email: string;
+  company: string;
+  position: string;
+  campaignGoals: string[];
+  socialPlatforms: string[];
+  budgetRange: string;
+  timeline: string;
+  targetAgeRange: string[];
+  targetGender: string[];
+  targetLocations: string[];
+  targetInterests: string[];
+  preferredPlatforms: string[];
+  productCategory: string;
+  productDescription: string;
+}
+
 interface CampaignGoalsProps {
-  formData: any;
-  updateFormData: (fieldName: string, value: any) => void;
+  formData: FormData;
+  updateFormData: (fieldName: keyof FormData, value: any) => void;
   setIsNextDisabled: (isDisabled: boolean) => void;
 }
 

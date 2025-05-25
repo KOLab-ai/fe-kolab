@@ -6,9 +6,28 @@ import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
+interface FormData {
+  role: string;
+  fullName: string;
+  email: string;
+  company: string;
+  position: string;
+  campaignGoals: string[];
+  socialPlatforms: string[];
+  budgetRange: string;
+  timeline: string;
+  targetAgeRange: string[];
+  targetGender: string[];
+  targetLocations: string[];
+  targetInterests: string[];
+  preferredPlatforms: string[];
+  productCategory: string;
+  productDescription: string;
+}
+
 interface ProfileDetailsProps {
-  formData: any;
-  updateFormData: (fieldName: string, value: any) => void;
+  formData: FormData;
+  updateFormData: (fieldName: keyof FormData, value: any) => void;
   setIsNextDisabled: (isDisabled: boolean) => void;
 }
 
@@ -30,7 +49,7 @@ export function ProfileDetails({
   }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData(e.target.name, e.target.value);
+    updateFormData(e.target.name as keyof FormData, e.target.value);
   };
 
   return (

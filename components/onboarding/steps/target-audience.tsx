@@ -1,9 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-
 import type React from "react";
-
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -19,10 +17,47 @@ import {
   Linkedin,
   Globe,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getCookie } from "cookies-next";
+
+interface Location {
+  id: string;
+  city: string;
+}
+
+interface Interest {
+  id: string;
+  name: string;
+}
+
+interface FormData {
+  role: string;
+  fullName: string;
+  email: string;
+  company: string;
+  position: string;
+  campaignGoals: string[];
+  socialPlatforms: string[];
+  budgetRange: string;
+  timeline: string;
+  targetAgeRange: string[];
+  targetGender: string[];
+  targetLocations: string[];
+  targetInterests: string[];
+  preferredPlatforms: string[];
+  productCategory: string;
+  productDescription: string;
+}
 
 interface TargetAudienceProps {
-  formData: any;
-  updateFormData: (fieldName: string, value: any) => void;
+  formData: FormData;
+  updateFormData: (fieldName: keyof FormData, value: any) => void;
   setIsNextDisabled: (isDisabled: boolean) => void;
 }
 
@@ -38,9 +73,51 @@ export function TargetAudience({
     locations: formData.targetLocations || [],
     interests: formData.targetInterests || [],
     preferredPlatforms: formData.preferredPlatforms || [],
-    newLocation: "",
-    newInterest: "",
   });
+
+  // State for API data
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [interests, setInterests] = useState<Interest[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch locations and interests from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [locationsRes, interestsRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_BE_API}/domiciles/`, {
+            headers: {
+              'Authorization': `Bearer ${getCookie('access_token')}`
+            }
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_BE_API}/categories/`, {
+            headers: {
+              'Authorization': `Bearer ${getCookie('access_token')}`
+            }
+          })
+        ]);
+
+        if (!locationsRes.ok || !interestsRes.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const [locationsData, interestsData] = await Promise.all([
+          locationsRes.json(),
+          interestsRes.json()
+        ]);
+
+        setLocations(locationsData);
+        setInterests(interestsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const ageRangeOptions = [
     { id: "13-17", label: "13-17" },
@@ -54,7 +131,6 @@ export function TargetAudience({
   const genderOptions = [
     { id: "male", label: "Male" },
     { id: "female", label: "Female" },
-    { id: "non-binary", label: "Non-binary" },
     { id: "all", label: "All genders" },
   ];
 
@@ -64,9 +140,6 @@ export function TargetAudience({
     { value: "twitter", label: "Twitter", icon: Twitter },
     { value: "facebook", label: "Facebook", icon: Facebook },
     { value: "tiktok", label: "TikTok", icon: TwitterIcon },
-    { value: "twitch", label: "Twitch", icon: Twitch },
-    { value: "linkedin", label: "LinkedIn", icon: Linkedin },
-    { value: "blog", label: "Blogs", icon: Globe },
   ];
 
   // Single useEffect to update parent form data and check validity
@@ -118,52 +191,26 @@ export function TargetAudience({
     }
   };
 
-  // Handle location input
-  const handleAddLocation = () => {
-    if (
-      state.newLocation.trim() &&
-      !state.locations.includes(state.newLocation.trim())
-    ) {
-      updateState({
-        locations: [...state.locations, state.newLocation.trim()],
-        newLocation: "",
-      });
+  // Handle location selection
+  const handleLocationChange = (locationId: string) => {
+    if (!state.locations.includes(locationId)) {
+      updateState({ locations: [...state.locations, locationId] });
     }
   };
 
-  const handleRemoveLocation = (location: string) => {
-    updateState({ locations: state.locations.filter((l) => l !== location) });
+  const handleRemoveLocation = (locationId: string) => {
+    updateState({ locations: state.locations.filter((id) => id !== locationId) });
   };
 
-  const handleKeyPressLocation = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddLocation();
+  // Handle interest selection
+  const handleInterestChange = (interestId: string) => {
+    if (!state.interests.includes(interestId)) {
+      updateState({ interests: [...state.interests, interestId] });
     }
   };
 
-  // Handle interest input
-  const handleAddInterest = () => {
-    if (
-      state.newInterest.trim() &&
-      !state.interests.includes(state.newInterest.trim())
-    ) {
-      updateState({
-        interests: [...state.interests, state.newInterest.trim()],
-        newInterest: "",
-      });
-    }
-  };
-
-  const handleRemoveInterest = (interest: string) => {
-    updateState({ interests: state.interests.filter((i) => i !== interest) });
-  };
-
-  const handleKeyPressInterest = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddInterest();
-    }
+  const handleRemoveInterest = (interestId: string) => {
+    updateState({ interests: state.interests.filter((id) => id !== interestId) });
   };
 
   // Handle platform selection
@@ -253,88 +300,34 @@ export function TargetAudience({
 
         <div className="space-y-3">
           <Label className="text-base font-medium">Target Locations</Label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {state.locations.map((location) => (
-              <Badge
-                key={location}
-                variant="secondary"
-                className="pl-3 pr-2 py-1.5 flex items-center gap-1 rounded-full bg-primary/10 text-primary"
-              >
-                {location}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveLocation(location)}
-                  className="ml-1 hover:bg-primary/20 rounded-full p-1 transition-colors"
-                >
-                  <X size={12} />
-                  <span className="sr-only">Remove {location}</span>
-                </button>
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={state.newLocation}
-              onChange={(e) => updateState({ newLocation: e.target.value })}
-              onKeyDown={handleKeyPressLocation}
-              placeholder="Add locations (e.g., USA, France, Asia)"
-              className="rounded-lg focus-visible:ring-primary"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="px-4 py-2 rounded-lg hover:border-primary/50 hover:text-primary transition-colors"
-              onClick={handleAddLocation}
-            >
-              Add
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Press Enter or click Add to add multiple locations
-          </p>
+          <Select onValueChange={handleLocationChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a location" />
+            </SelectTrigger>
+            <SelectContent>
+              {locations.map((location) => (
+                <SelectItem key={location.id} value={location.id}>
+                  {location.city}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-3">
           <Label className="text-base font-medium">Target Interests</Label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {state.interests.map((interest) => (
-              <Badge
-                key={interest}
-                variant="secondary"
-                className="pl-3 pr-2 py-1.5 flex items-center gap-1 rounded-full bg-primary/10 text-primary"
-              >
-                {interest}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveInterest(interest)}
-                  className="ml-1 hover:bg-primary/20 rounded-full p-1 transition-colors"
-                >
-                  <X size={12} />
-                  <span className="sr-only">Remove {interest}</span>
-                </button>
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={state.newInterest}
-              onChange={(e) => updateState({ newInterest: e.target.value })}
-              onKeyDown={handleKeyPressInterest}
-              placeholder="Add interests (e.g., Fashion, Technology, Fitness)"
-              className="rounded-lg focus-visible:ring-primary"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="px-4 py-2 rounded-lg hover:border-primary/50 hover:text-primary transition-colors"
-              onClick={handleAddInterest}
-            >
-              Add
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Press Enter or click Add to add multiple interests
-          </p>
+          <Select onValueChange={handleInterestChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select an interest" />
+            </SelectTrigger>
+            <SelectContent>
+              {interests.map((interest) => (
+                <SelectItem key={interest.id} value={interest.id}>
+                  {interest.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-3">
