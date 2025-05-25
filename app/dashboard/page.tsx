@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InfluencerCard } from "@/components/dashboard/influencer-card";
 import { MetricsCard } from "@/components/dashboard/metrics-card";
 import { FilterBar } from "@/components/dashboard/filter-bar";
@@ -14,169 +14,207 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ArrowUpRight, Download, Filter, RefreshCw, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-// Mock data for influencers
-const mockInfluencers = [
-  {
-    id: 1,
-    name: "VOLIX",
-    handle: "@volix.media",
-    platform: "Instagram",
-    followers: 682742,
-    engagementRate: 1.06,
-    categories: ["Media Publisher"],
-    matchScore: 95,
-    location: "Jakarta Selatan",
-    image: "https://cdn.ice.id/mobile/1689577969750_image_cropper_7EA52D43-7466-48FF-8B2E-6F261E435E39-469-0000000A02A3C6B9.jpg",
-    recentPosts: 15,
-    averageLikes: 7200,
-    averageComments: 69,
-    bio: "Account Executive at VOLIX.",
-    audienceDemo: {
-      age: "18-34 (75%)",
-      gender: "Mixed",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 27.4M",
-      story: "Rp 10.2M",
-      video: "Rp 246.6M",
-    },
-  },
-  {
-    id: 2,
-    name: "Puput Sumarni",
-    handle: "@puputsumarni_",
-    platform: "TikTok",
-    followers: 430050,
-    engagementRate: 4.2,
-    categories: ["Actor & Actress", "Foodies", "Fashion Enthusiast", "Comedian", "Fitness & Health Enthusiast"],
-    matchScore: 88,
-    location: "Palembang",
-    image: "https://cdn.ice.id/mobile/1692932203621_image_cropper_D1938514-D8B2-4BC0-9E10-164520049DAA-45980-00002A706FEA8203.jpg",
-    recentPosts: 20,
-    averageLikes: 18000,
-    averageComments: 450,
-    bio: "Konten kreator anak kos",
-    audienceDemo: {
-      age: "18-24 (65%)",
-      gender: "Female (70%)",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 2.06M",
-      story: "Rp 1.5M",
-      video: "Rp 3M",
-    },
-  },
-  {
-    id: 3,
-    name: "Michelle Tjandra",
-    handle: "@mcheltjandra",
-    platform: "Instagram",
-    followers: 45374,
-    engagementRate: 3.29,
-    categories: ["Fashion Enthusiast", "Fitness & Health Enthusiast"],
-    matchScore: 85,
-    location: "Depok",
-    image: "https://cdn.ice.id/mobile/1719299425390_image_cropper_4EBDEE69-8A57-46BB-9D10-9793ED974962-3800-0000021AE3AF5DA3.jpg",
-    recentPosts: 25,
-    averageLikes: 1500,
-    averageComments: 9,
-    bio: "A free bird 🦜",
-    audienceDemo: {
-      age: "18-34 (80%)",
-      gender: "Female (75%)",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 1.1M",
-      story: "Rp 412.5K",
-      video: "Rp 2.06M",
-    },
-  },
-  {
-    id: 4,
-    name: "Melvin",
-    handle: "@melvinmaylani",
-    platform: "Instagram",
-    followers: 60300,
-    engagementRate: 3.5,
-    categories: ["Beauty & Wellness Enthusiast", "Fashion Enthusiast"],
-    matchScore: 82,
-    location: "Bogor",
-    image: "https://cdn.ice.id/mobile/1714989951486_image_cropper_1A33E0A1-02A5-4408-BF21-31BC6BE32A11-21723-00000ED2CB56CAB0.jpg",
-    recentPosts: 18,
-    averageLikes: 2100,
-    averageComments: 45,
-    bio: "Beauty and fashion content creator",
-    audienceDemo: {
-      age: "18-34 (70%)",
-      gender: "Female (65%)",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 4.8M",
-      story: "Rp 2.5M",
-      video: "Rp 6.1M",
-    },
-  },
-  {
-    id: 5,
-    name: "Akhira Maulidio",
-    handle: "@akhira.mf",
-    platform: "Instagram",
-    followers: 60000,
-    engagementRate: 3.8,
-    categories: ["Beauty & Wellness Enthusiast"],
-    matchScore: 79,
-    location: "Yogyakarta",
-    image: "https://cdn.ice.id/INFLUENCER/1717385763418-Screenshot_2024-06-03_103519.png",
-    recentPosts: 22,
-    averageLikes: 2300,
-    averageComments: 55,
-    bio: "Beauty creators & skincare enthusiast",
-    audienceDemo: {
-      age: "18-34 (75%)",
-      gender: "Female (80%)",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 1.2M",
-      story: "Rp 500K",
-      video: "Rp 825K",
-    },
-  },
-  {
-    id: 6,
-    name: "ara itsme",
-    handle: "@daraaitsme_",
-    platform: "TikTok",
-    followers: 12128,
-    engagementRate: 4.1,
-    categories: ["Foodies"],
-    matchScore: 76,
-    location: "Bandung",
-    image: "https://cdn.ice.id/mobile/1728885094211_image_cropper_1CA45E28-7D64-41AD-8D46-C4D0716EF8CE-69494-00000592F9753566.jpg",  
-    recentPosts: 15,
-    averageLikes: 800,
-    averageComments: 35,
-    bio: "Master of Ceremony, Full time Tax Consulting, konten creator foodies",
-    audienceDemo: {
-      age: "18-34 (65%)",
-      gender: "Mixed",
-      topLocations: ["Indonesia"],
-    },
-    pricing: {
-      post: "Rp 500K",
-      story: "Rp 300K",
-      video: "Rp 103.1K",
-    },
-  },
-];
+interface RateCard {
+  title: string;
+  price: number;
+}
+
+interface SocialPlatform {
+  id: string;
+  platform: string;
+  profile_url: string;
+  username: string;
+  followers: number;
+  engagement_rate: string | null;
+  avg_likes_per_post: string | null;
+  avg_comments_per_post: string | null;
+  avg_views_per_post: string | null;
+  rate_cards: RateCard[];
+}
+
+interface ApiInfluencer {
+  id: string;
+  full_name: string;
+  profile_picture: string;
+  domicile: string;
+  description: string;
+  email: string;
+  phone: string;
+  address: string;
+  categories: string[];
+  social_platforms: SocialPlatform[];
+}
+
+interface TransformedInfluencer {
+  id: string;
+  name: string;
+  handle: string;
+  platform: string;
+  followers: number;
+  engagementRate: number;
+  categories: string[];
+  matchScore: number;
+  location: string;
+  image: string;
+  recentPosts: number;
+  averageLikes: string;
+  averageComments: string;
+  bio: string;
+  audienceDemo: {
+    age: string;
+    gender: string;
+    topLocations: string[];
+  };
+  pricing: {
+    post: string;
+    story: string;
+    video: string;
+  };
+}
+
+interface Campaign {
+  id: string;
+  name: string;
+}
+
+// Function to transform API data into the format expected by components
+const transformApiData = (apiData: ApiInfluencer[]): TransformedInfluencer[] => {
+  return apiData.map((influencer) => {
+    // Get the primary platform (Instagram if available, otherwise first platform)
+    const primaryPlatform = influencer.social_platforms.find(p => p.platform === "Instagram") || influencer.social_platforms[0];
+    
+    // Calculate total followers across all platforms
+    const totalFollowers = influencer.social_platforms.reduce((sum, platform) => sum + (platform.followers || 0), 0);
+    
+    // Get the highest engagement rate
+    const highestEngagementRate = Math.max(
+      ...influencer.social_platforms
+        .map(p => parseFloat(p.engagement_rate || '0'))
+        .filter(rate => !isNaN(rate))
+    );
+
+    return {
+      id: influencer.id,
+      name: influencer.full_name,
+      handle: `@${primaryPlatform?.username || ''}`,
+      platform: primaryPlatform?.platform || 'Unknown',
+      followers: totalFollowers,
+      engagementRate: highestEngagementRate,
+      categories: influencer.categories,
+      matchScore: Math.floor(Math.random() * 20) + 80, // Placeholder for now
+      location: influencer.domicile,
+      image: influencer.profile_picture,
+      recentPosts: Math.floor(Math.random() * 30) + 10, // Placeholder for now
+      averageLikes: primaryPlatform?.avg_likes_per_post || '0',
+      averageComments: primaryPlatform?.avg_comments_per_post || '0',
+      bio: influencer.description,
+      audienceDemo: {
+        age: "18-34 (75%)", // Placeholder for now
+        gender: "Mixed", // Placeholder for now
+        topLocations: ["Indonesia"], // Placeholder for now
+      },
+      pricing: {
+        post: `Rp ${primaryPlatform?.rate_cards?.[0]?.price?.toLocaleString() || '0'}`,
+        story: `Rp ${primaryPlatform?.rate_cards?.[1]?.price?.toLocaleString() || '0'}`,
+        video: `Rp ${primaryPlatform?.rate_cards?.[2]?.price?.toLocaleString() || '0'}`,
+      },
+    };
+  });
+};
 
 export default function DashboardPage() {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [influencers, setInfluencers] = useState<TransformedInfluencer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [selectedCampaign, setSelectedCampaign] = useState<string>("");
+  const router = useRouter();
+
+  // Fetch campaigns
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const token = getCookie('access_token');
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BE_API}/campaigns/`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        setCampaigns(data.results);
+        // Set first campaign as selected by default
+        if (data.results.length > 0) {
+          setSelectedCampaign(data.results[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching campaigns:', error);
+      }
+    };
+
+    fetchCampaigns();
+  }, []);
+
+  // Fetch influencers when selected campaign changes
+  useEffect(() => {
+    const fetchInfluencers = async () => {
+      if (!selectedCampaign) return;
+
+      setLoading(true);
+      try {
+        const token = getCookie('access_token');
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BE_API}/campaigns/${selectedCampaign}/recommendations/`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        setInfluencers(transformApiData(data));
+      } catch (error) {
+        console.error('Error fetching influencers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInfluencers();
+  }, [selectedCampaign]);
+
+  // Calculate metrics
+  const totalMatches = influencers.length;
+  const potentialReach = influencers.reduce((sum, inf) => sum + inf.followers, 0);
+  const avgMatchScore = Math.round(
+    influencers.reduce((sum, inf) => sum + inf.matchScore, 0) / influencers.length
+  );
 
   return (
     <div className="flex-1 p-4 md:p-6 mx-auto w-full">
@@ -187,22 +225,29 @@ export default function DashboardPage() {
             Welcome back! Here are your AI-powered influencer recommendations.
           </p>
         </div>
-        {/* <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="h-9">
-            <Save className="mr-2 h-4 w-4" />
-            Save Report
-          </Button>
-          <Button size="sm" className="h-9">
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Refresh Recommendations
-          </Button>
-        </div> */}
+        <div className="w-[200px]">
+          <Select
+            value={selectedCampaign}
+            onValueChange={setSelectedCampaign}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select campaign" />
+            </SelectTrigger>
+            <SelectContent>
+              {campaigns.map((campaign) => (
+                <SelectItem key={campaign.id} value={campaign.id}>
+                  {campaign.product_category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <MetricsCard
           title="Total Matches"
-          value="42"
+          value={totalMatches.toString()}
           description="Potential influencers"
           trend="+12% from last week"
           trendUp={true}
@@ -210,7 +255,7 @@ export default function DashboardPage() {
         />
         <MetricsCard
           title="Potential Reach"
-          value="12.4M"
+          value={`${(potentialReach / 1000000).toFixed(1)}M`}
           description="Combined audience"
           trend="+8% from last week"
           trendUp={true}
@@ -218,7 +263,7 @@ export default function DashboardPage() {
         />
         <MetricsCard
           title="Avg. Match Score"
-          value="84%"
+          value={`${avgMatchScore}%`}
           description="Based on your criteria"
           trend="+5% from last week"
           trendUp={true}
@@ -243,7 +288,7 @@ export default function DashboardPage() {
                     category.
                   </CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <Button variant="outline" size="sm" className="h-8">
                     <Download className="mr-2 h-3.5 w-3.5" />
                     Export
@@ -252,20 +297,26 @@ export default function DashboardPage() {
                     <Filter className="mr-2 h-3.5 w-3.5" />
                     Filters
                   </Button>
-                </div>
+                </div> */}
               </div>
             </CardHeader>
             <CardContent>
-              <FilterBar
+              {/* <FilterBar
                 activeFilter={activeFilter}
                 setActiveFilter={setActiveFilter}
-              />
+              /> */}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {mockInfluencers.map((influencer) => (
-                  <InfluencerCard key={influencer.id} influencer={influencer} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="flex items-center justify-center h-40">
+                  <p className="text-muted-foreground">Loading influencers...</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  {influencers.map((influencer) => (
+                    <InfluencerCard key={influencer.id} influencer={influencer} />
+                  ))}
+                </div>
+              )}
 
               <div className="mt-6 flex justify-center">
                 <Button variant="outline" className="mr-2">
