@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,7 @@ import {
   Twitter,
   Youtube,
   TrendingUp,
+  Loader2,
 } from "lucide-react";
 import {
   Tooltip,
@@ -36,14 +37,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useSearchParams } from "next/navigation";
+import { getCookie } from "cookies-next";
+import ReactMarkdown from 'react-markdown';
 
 interface InfluencerCardProps {
   influencer: any;
+  campaignId: string;
 }
 
-export function InfluencerCard({ influencer }: InfluencerCardProps) {
+interface ReasoningData {
+  report: string;
+}
+
+export function InfluencerCard({ influencer, campaignId }: InfluencerCardProps) {
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [reasoningData, setReasoningData] = useState<ReasoningData | null>(null);
+  const [isLoadingReasoning, setIsLoadingReasoning] = useState(false);
+  const searchParams = useSearchParams();
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
@@ -75,6 +87,35 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
     if (score >= 80) return "bg-gradient-to-r from-green-500 to-emerald-400";
     if (score >= 70) return "bg-gradient-to-r from-amber-500 to-yellow-500";
     return "bg-gradient-to-r from-yellow-500 to-amber-400";
+  };
+
+  const fetchReasoning = async () => {
+    const campaignIdQuery = searchParams.get('campaign');
+
+    setIsLoadingReasoning(true);
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BE_API}/campaigns/${campaignId || campaignIdQuery}/matching/?influencerId=${influencer.id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setReasoningData(data);
+    } catch (error) {
+      console.error('Error fetching reasoning:', error);
+    } finally {
+      setIsLoadingReasoning(false);
+    }
   };
 
   return (
@@ -228,7 +269,7 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                 Detailed information about {influencer.name}
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 border-2 border-primary/20">
                   <AvatarImage
@@ -287,6 +328,41 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
               </div>
 
               <div className="border-t pt-4 border-white/10 dark:border-gray-800/50">
+                <h3 className="font-medium mb-2">Matching Analysis</h3>
+                {isLoadingReasoning ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  </div>
+                ) : reasoningData ? (
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <ReactMarkdown
+                      components={{
+                        h1: ({ node, ...props }) => <h1 className="text-xl font-bold mt-4 mb-2" {...props} />,
+                        h2: ({ node, ...props }) => <h2 className="text-lg font-semibold mt-4 mb-2" {...props} />,
+                        h3: ({ node, ...props }) => <h3 className="text-base font-medium mt-3 mb-2" {...props} />,
+                        p: ({ node, ...props }) => <p className="text-sm text-muted-foreground mb-2" {...props} />,
+                        ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-2" {...props} />,
+                        li: ({ node, ...props }) => <li className="text-sm text-muted-foreground mb-1" {...props} />,
+                        strong: ({ node, ...props }) => <strong className="font-semibold text-foreground" {...props} />,
+                        hr: ({ node, ...props }) => <hr className="my-4 border-white/10" {...props} />,
+                      }}
+                    >
+                      {reasoningData.report}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={fetchReasoning}
+                    className="w-full"
+                  >
+                    Load Matching Analysis
+                  </Button>
+                )}
+              </div>
+
+              <div className="border-t pt-4 border-white/10 dark:border-gray-800/50">
                 <h3 className="font-medium mb-2">Audience Demographics</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -326,7 +402,7 @@ export function InfluencerCard({ influencer }: InfluencerCardProps) {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-4 pt-4 border-t border-white/10">
               <Button
                 variant="outline"
                 className="rounded-full border-primary/20 hover:bg-primary/5 hover:text-primary"

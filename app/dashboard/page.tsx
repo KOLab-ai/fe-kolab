@@ -332,7 +332,7 @@ function DashboardContent() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                   {influencers.map((influencer) => (
-                    <InfluencerCard key={influencer.id} influencer={influencer} />
+                    <InfluencerCard key={influencer.id} influencer={influencer} campaignId={selectedCampaign} />
                   ))}
                 </div>
               )}
