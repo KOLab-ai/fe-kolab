@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
 
 interface FormData {
   role: string;
@@ -20,6 +21,7 @@ interface FormData {
   email: string;
   company: string;
   position: string;
+  title: string;
   campaignGoals: string[];
   socialPlatforms: string[];
   budgetRange: string;
@@ -95,9 +97,12 @@ export function CampaignGoals({
 
     // Check if form is valid
     const isValid =
-      state.goals.length > 0 && state.budgetRange && state.timeline;
+      formData.title.trim() !== "" &&
+      state.goals.length > 0 && 
+      state.budgetRange && 
+      state.timeline;
     setIsNextDisabled(!isValid);
-  }, [state, updateFormData, setIsNextDisabled]);
+  }, [state, formData.title, updateFormData, setIsNextDisabled]);
 
   // Single handler for all state updates
   const updateState = (field: string, value: any) => {
@@ -141,6 +146,19 @@ export function CampaignGoals({
       </div>
 
       <div className="space-y-6 mt-8">
+        <div className="space-y-3">
+          <Label className="text-base font-medium">
+            Campaign Title
+          </Label>
+          <Input
+            type="text"
+            placeholder="Enter your campaign title"
+            value={formData.title}
+            onChange={(e) => updateFormData("title", e.target.value)}
+            className="w-full"
+          />
+        </div>
+
         <div className="space-y-3">
           <Label className="text-base font-medium">
             What are your primary campaign goals? (Select all that apply)

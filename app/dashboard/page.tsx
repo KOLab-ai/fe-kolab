@@ -84,7 +84,7 @@ interface TransformedInfluencer {
 
 interface Campaign {
   id: string;
-  name: string;
+  title: string;
 }
 
 // Function to transform API data into the format expected by components
@@ -236,7 +236,7 @@ export default function DashboardPage() {
             <SelectContent>
               {campaigns.map((campaign) => (
                 <SelectItem key={campaign.id} value={campaign.id}>
-                  {campaign.product_category}
+                  {campaign.title}
                 </SelectItem>
               ))}
             </SelectContent>

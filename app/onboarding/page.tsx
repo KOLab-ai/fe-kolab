@@ -36,6 +36,7 @@ interface FormData {
   email: string;
   company: string;
   position: string;
+  title: string;
   campaignGoals: string[];
   socialPlatforms: string[];
   budgetRange: string;
@@ -113,6 +114,7 @@ export default function OnboardingPage() {
     email: "",
     company: "",
     position: "",
+    title: "",
     campaignGoals: [],
     socialPlatforms: [],
     budgetRange: "",
@@ -202,6 +204,7 @@ export default function OnboardingPage() {
       
       // Prepare campaign data with the new structure
       const campaignData = {
+        title: formData.title,
         campaign_goals: formData.campaignGoals.map(goal => formatCampaignGoal(goal).toLowerCase()),
         social_platforms: formData.socialPlatforms,
         budget_range: formatBudget(formData.budgetRange),

@@ -33,6 +33,7 @@ interface ApiResponse {
 // Interface for campaign data from API
 interface Campaign {
   id: string;
+  title: string;
   campaign_goals: string[];
   social_platforms: string[];
   budget_range: string;
@@ -96,7 +97,7 @@ export default function CampaignPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[25%]">Campaign Details</TableHead>
+                  <TableHead className="w-[25%]">Campaign Title</TableHead>
                   <TableHead className="w-[20%]">Goals & Platforms</TableHead>
                   <TableHead className="w-[20%]">Target Audience</TableHead>
                   <TableHead className="w-[15%]">Budget & Timeline</TableHead>
@@ -120,12 +121,7 @@ export default function CampaignPage() {
                   campaigns.map((campaign) => (
                     <TableRow key={campaign.id}>
                       <TableCell className="font-medium">
-                        <div className="flex flex-col">
-                          <span className="line-clamp-1">{campaign.product_description}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {campaign.product_category}
-                          </span>
-                        </div>
+                        {campaign.title}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
