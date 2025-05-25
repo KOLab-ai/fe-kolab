@@ -54,7 +54,6 @@ interface ReasoningData {
 }
 
 export function InfluencerCard({ influencer, campaignId }: InfluencerCardProps) {
-  console.log("🚀 ~ InfluencerCard ~ influencer:", influencer)
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
   const [reasoningData, setReasoningData] = useState<ReasoningData | null>(null);
