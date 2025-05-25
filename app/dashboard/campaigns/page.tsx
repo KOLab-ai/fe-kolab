@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   TableBody,
   TableRow,
@@ -17,109 +17,73 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
+import { getCookie } from 'cookies-next';
 
-// Interface untuk data campaign sesuai dengan form onboarding
-interface Campaign {
-  id: string;
-  role: string;
-  fullName: string;
-  email: string;
-  company: string;
-  position: string;
-  campaignGoals: string[];
-  socialPlatforms: string[];
-  budgetRange: string;
-  timeline: string;
-  targetAgeRange: string[];
-  targetGender: string[];
-  targetLocations: string[];
-  targetInterests: string[];
-  preferredPlatforms: string[];
-  productCategory: string;
-  productDescription: string;
-  status: "draft" | "active" | "completed" | "cancelled";
-  createdAt: string;
+// Interface for API response
+interface ApiResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Campaign[];
 }
 
-// Dummy data untuk campaign
-const dummyCampaigns: Campaign[] = [
-  {
-    id: "1",
-    role: "brand",
-    fullName: "John Doe",
-    email: "john@example.com",
-    company: "Fashion Brand X",
-    position: "Marketing Manager",
-    campaignGoals: ["Brand Awareness", "Product Launch"],
-    socialPlatforms: ["Instagram", "TikTok"],
-    budgetRange: "50M - 100M",
-    timeline: "3 months",
-    targetAgeRange: ["18-24", "25-34"],
-    targetGender: ["Female"],
-    targetLocations: ["Jakarta", "Surabaya"],
-    targetInterests: ["Fashion", "Lifestyle"],
-    preferredPlatforms: ["Instagram", "TikTok"],
-    productCategory: "Fashion",
-    productDescription: "Summer collection launch campaign",
-    status: "active",
-    createdAt: "2024-03-15",
-  },
-  {
-    id: "2",
-    role: "brand",
-    fullName: "Jane Smith",
-    email: "jane@example.com",
-    company: "Tech Company Y",
-    position: "Digital Marketing",
-    campaignGoals: ["Product Review", "Brand Awareness"],
-    socialPlatforms: ["YouTube", "Instagram"],
-    budgetRange: "20M - 50M",
-    timeline: "1 month",
-    targetAgeRange: ["25-34", "35-44"],
-    targetGender: ["All"],
-    targetLocations: ["Jakarta"],
-    targetInterests: ["Technology", "Gadgets"],
-    preferredPlatforms: ["YouTube", "Instagram"],
-    productCategory: "Technology",
-    productDescription: "New smartphone launch campaign",
-    status: "draft",
-    createdAt: "2024-03-10",
-  },
-];
+// Interface for campaign data from API
+interface Campaign {
+  id: string;
+  campaign_goals: string[];
+  social_platforms: string[];
+  budget_range: string;
+  timeline: string;
+  target_age_range: string[];
+  target_gender: string[];
+  target_locations: string[];
+  target_interests: string[];
+  preferred_platforms: string[];
+  product_category: string;
+  product_description: string;
+}
 
 export default function CampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const [campaigns] = useState<Campaign[]>(dummyCampaigns);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(campaigns.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = campaigns.slice(startIndex, endIndex);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    getCampaigns(page);
   };
 
-  // Function to get status badge color
-  const getStatusColor = (status: Campaign["status"]) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800";
-      case "draft":
-        return "bg-gray-100 text-gray-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const getCampaigns = async (page: number = 1) => {
+    try {
+      setIsLoading(true);
+      const token = getCookie('access_token');
+      
+      const headers = {
+        "Authorization": `Bearer ${token}`
+      }
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BE_API}/campaigns/?page=${page}`, { headers });
+      const data: ApiResponse = await response.json();
+      
+      setCampaigns(data.results);
+      setTotalItems(data.count);
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getCampaigns(1);
+  }, []);
+
+  // Calculate total pages based on API response
+  const totalPages = Math.ceil(totalItems / 10); // Assuming 10 items per page from API
 
   return (
     <div className="w-full p-4">
@@ -133,93 +97,106 @@ export default function CampaignPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[25%]">Campaign Details</TableHead>
-                  <TableHead className="w-[15%]">Company</TableHead>
                   <TableHead className="w-[20%]">Goals & Platforms</TableHead>
                   <TableHead className="w-[20%]">Target Audience</TableHead>
                   <TableHead className="w-[15%]">Budget & Timeline</TableHead>
-                  <TableHead className="w-[5%]">Status</TableHead>
+                  <TableHead className="w-[20%]">Product Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentItems.map((campaign) => (
-                  <TableRow key={campaign.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex flex-col">
-                        <span className="line-clamp-1">{campaign.productDescription}</span>
-                        <span className="text-sm text-muted-foreground">
-                          {campaign.productCategory}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Created: {new Date(campaign.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="line-clamp-1">{campaign.company}</span>
-                        <span className="text-sm text-muted-foreground">
-                          {campaign.position}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <div className="flex flex-wrap gap-1">
-                          {campaign.campaignGoals.map((goal, idx) => (
-                            <Badge
-                              key={idx}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {goal}
-                            </Badge>
-                          ))}
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {campaign.socialPlatforms.map((platform, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-1 text-xs bg-primary/10 rounded-full"
-                            >
-                              {platform}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <div className="text-sm">
-                          <span className="font-medium">Age:</span>{" "}
-                          {campaign.targetAgeRange.join(", ")}
-                        </div>
-                        <div className="text-sm">
-                          <span className="font-medium">Gender:</span>{" "}
-                          {campaign.targetGender.join(", ")}
-                        </div>
-                        <div className="text-sm">
-                          <span className="font-medium">Location:</span>{" "}
-                          {campaign.targetLocations.join(", ")}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium">Budget:</span>
-                        <span className="text-sm">{campaign.budgetRange}</span>
-                        <span className="font-medium mt-1">Timeline:</span>
-                        <span className="text-sm">{campaign.timeline}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`${getStatusColor(campaign.status)} capitalize`}
-                      >
-                        {campaign.status}
-                      </Badge>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8">
+                      Loading...
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : campaigns.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8">
+                      No campaigns found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  campaigns.map((campaign) => (
+                    <TableRow key={campaign.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex flex-col">
+                          <span className="line-clamp-1">{campaign.product_description}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {campaign.product_category}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <div className="flex flex-wrap gap-1">
+                            {campaign.campaign_goals.map((goal, idx) => (
+                              <Badge
+                                key={idx}
+                                variant="secondary"
+                                className="text-xs"
+                              >
+                                {goal}
+                              </Badge>
+                            ))}
+                          </div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {campaign.social_platforms.map((platform, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-1 text-xs bg-primary/10 rounded-full"
+                              >
+                                {platform}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <div className="text-sm">
+                            <span className="font-medium">Age:</span>{" "}
+                            {campaign.target_age_range.join(", ")}
+                          </div>
+                          <div className="text-sm">
+                            <span className="font-medium">Gender:</span>{" "}
+                            {campaign.target_gender.join(", ")}
+                          </div>
+                          <div className="text-sm">
+                            <span className="font-medium">Location:</span>{" "}
+                            {campaign.target_locations.join(", ")}
+                          </div>
+                          <div className="text-sm">
+                            <span className="font-medium">Interests:</span>{" "}
+                            {campaign.target_interests.join(", ")}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-medium">Budget:</span>
+                          <span className="text-sm">{campaign.budget_range}</span>
+                          <span className="font-medium mt-1">Timeline:</span>
+                          <span className="text-sm">{campaign.timeline}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <div className="text-sm">
+                            <span className="font-medium">Preferred Platforms:</span>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {campaign.preferred_platforms.map((platform, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {platform}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -227,8 +204,8 @@ export default function CampaignPage() {
           {/* Pagination */}
           <div className="flex items-center justify-between p-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Showing {startIndex + 1} to{" "}
-              {Math.min(endIndex, campaigns.length)} of {campaigns.length}{" "}
+              Showing {((currentPage - 1) * 10) + 1} to{" "}
+              {Math.min(currentPage * 10, totalItems)} of {totalItems}{" "}
               entries
             </div>
             <Pagination>
@@ -241,8 +218,33 @@ export default function CampaignPage() {
                     }
                   />
                 </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
+                
+                {/* First page */}
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => handlePageChange(1)}
+                    isActive={currentPage === 1}
+                  >
+                    1
+                  </PaginationLink>
+                </PaginationItem>
+
+                {/* Left ellipsis */}
+                {currentPage > 3 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )}
+
+                {/* Pages around current page */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(
+                    (page) =>
+                      page !== 1 &&
+                      page !== totalPages &&
+                      Math.abs(page - currentPage) <= 1
+                  )
+                  .map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
@@ -251,8 +253,27 @@ export default function CampaignPage() {
                         {page}
                       </PaginationLink>
                     </PaginationItem>
-                  ),
+                  ))}
+
+                {/* Right ellipsis */}
+                {currentPage < totalPages - 2 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
                 )}
+
+                {/* Last page */}
+                {totalPages > 1 && (
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => handlePageChange(totalPages)}
+                      isActive={currentPage === totalPages}
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => handlePageChange(currentPage + 1)}

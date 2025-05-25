@@ -111,7 +111,6 @@ export default function InfluencersPage() {
     try {
       setIsLoading(true);
       const token = getCookie('access_token');
-      console.log("🚀 ~ getInfluencers ~ token:", token)
       
       const headers = {
         "Authorization": `Bearer ${token}`
