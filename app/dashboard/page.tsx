@@ -80,6 +80,10 @@ interface TransformedInfluencer {
     story: string;
     video: string;
   };
+  socialLink: string;
+  website: string;
+  phone: string;
+  email: string;
 }
 
 interface Campaign {
@@ -128,6 +132,9 @@ const transformApiData = (apiData: ApiInfluencer[]): TransformedInfluencer[] => 
         story: `Rp ${primaryPlatform?.rate_cards?.[1]?.price?.toLocaleString() || '0'}`,
         video: `Rp ${primaryPlatform?.rate_cards?.[2]?.price?.toLocaleString() || '0'}`,
       },
+      socialLink: primaryPlatform?.profile_url || '',
+      phone: influencer.phone || '',
+      email: influencer.email || '',
     };
   });
 };

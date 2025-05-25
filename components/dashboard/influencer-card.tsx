@@ -22,6 +22,9 @@ import {
   Youtube,
   TrendingUp,
   Loader2,
+  Mail,
+  Phone,
+  Globe,
 } from "lucide-react";
 import {
   Tooltip,
@@ -51,10 +54,12 @@ interface ReasoningData {
 }
 
 export function InfluencerCard({ influencer, campaignId }: InfluencerCardProps) {
+  console.log("🚀 ~ InfluencerCard ~ influencer:", influencer)
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
   const [reasoningData, setReasoningData] = useState<ReasoningData | null>(null);
   const [isLoadingReasoning, setIsLoadingReasoning] = useState(false);
+  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const searchParams = useSearchParams();
 
   const formatNumber = (num: number) => {
@@ -406,24 +411,136 @@ export function InfluencerCard({ influencer, campaignId }: InfluencerCardProps) 
               <Button
                 variant="outline"
                 className="rounded-full border-primary/20 hover:bg-primary/5 hover:text-primary"
+                disabled
               >
                 Save Profile
               </Button>
-              <Button className="rounded-full bg-gradient-brand hover:opacity-90">
+              <Button 
+                className="rounded-full bg-gradient-brand hover:opacity-90"
+                onClick={() => setIsContactDialogOpen(true)}
+              >
                 Contact Influencer
               </Button>
             </div>
           </DialogContent>
         </Dialog>
 
-        <Button
-          variant="default"
-          size="sm"
-          className="w-full ml-2 rounded-full bg-gradient-brand hover:opacity-90"
-        >
-          <MessageSquare className="mr-2 h-4 w-4" />
-          Contact
-        </Button>
+        <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="default"
+              size="sm"
+              className="w-full ml-2 rounded-full bg-gradient-brand hover:opacity-90"
+              onClick={() => setIsContactDialogOpen(true)}
+            >
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Contact
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] glassmorphism border-white/10 dark:border-gray-800/50">
+            <DialogHeader>
+              <DialogTitle>Contact Information</DialogTitle>
+              <DialogDescription>
+                Get in touch with {influencer.name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 border-2 border-primary/20">
+                  <AvatarImage
+                    src={influencer.image || "/placeholder.svg"}
+                    alt={influencer.name}
+                  />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {influencer.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="font-medium">{influencer.name}</h3>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    {getPlatformIcon(influencer.platform)}
+                    <span>{influencer.handle}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {influencer.email && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg glassmorphism">
+                    <Mail className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="text-sm font-medium">Email</p>
+                      <a 
+                        href={`mailto:${influencer.email}`}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {influencer.email}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {influencer.phone && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg glassmorphism">
+                    <Phone className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="text-sm font-medium">Phone</p>
+                      <a 
+                        href={`tel:${influencer.phone}`}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {influencer.phone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {influencer.website && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg glassmorphism">
+                    <Globe className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="text-sm font-medium">Website</p>
+                      <a 
+                        href={influencer.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {influencer.website}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {influencer.socialLink && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg glassmorphism">
+                    {getPlatformIcon(influencer.platform)}
+                    <div>
+                      <p className="text-sm font-medium">Social Media</p>
+                      <a 
+                        href={influencer.socialLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {influencer.handle}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                onClick={() => setIsContactDialogOpen(false)}
+                className="rounded-full"
+              >
+                Close
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );
