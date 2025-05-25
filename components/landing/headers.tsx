@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "../theme-toggle";
 import { Button } from "../ui/button";
+import { deleteCookie, getCookie } from "cookies-next";
 
 interface User {
   id: number;
@@ -19,18 +20,28 @@ interface User {
 export function Headers() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
       setUser(JSON.parse(userData));
+      setIsLoggedIn(true);
     }
+
+    const accessToken = getCookie('access_token');
+    if (accessToken) {
+      setIsLoggedIn(true);
+    }
+
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+    deleteCookie('access_token'); 
+    deleteCookie('refresh_token');
+    setIsLoggedIn(false);
     router.push('/');
   };
 
@@ -69,7 +80,7 @@ export function Headers() {
         </nav>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          {user ? (
+          {isLoggedIn ? (
             <>
               <Button
                 variant="outline"
