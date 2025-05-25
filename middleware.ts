@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getCookie } from 'cookies-next'
 
 export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('access_token')

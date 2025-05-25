@@ -40,10 +40,12 @@ export default function LoginPage() {
         throw new Error(data.message || "Login failed");
       }
 
-      // Store both access and refresh tokens in cookies
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
 
-      setCookie('access_token', data.access, { path: '/', maxAge: 2592000 }); // 30 days
-      setCookie('refresh_token', data.refresh, { path: '/', maxAge: 2592000 }); // 30 days
+      // Store tokens in cookies
+      setCookie('access_token', data.tokens.access, { path: '/', maxAge: 2592000 }); // 30 days
+      setCookie('refresh_token', data.tokens.refresh, { path: '/', maxAge: 2592000 }); // 30 days
       
       // Redirect to dashboard
       router.push("/dashboard");

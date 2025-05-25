@@ -49,8 +49,21 @@ export function DashboardHeader() {
   };
 
   const getUserInitials = () => {
-    if (!user) return 'JD';
-    return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
+    if (!user) return 'U';
+    if (user.first_name && user.last_name) {
+      return `${user.first_name[0]}${user.last_name[0]}`.toUpperCase();
+    }
+
+    console.log(user.username);
+    return user.username[0].toUpperCase();
+  };
+
+  const getDisplayName = () => {
+    if (!user) return 'User';
+    if (user.first_name && user.last_name) {
+      return `${user.first_name} ${user.last_name}`;
+    }
+    return user.username;
   };
 
   return (
@@ -125,10 +138,6 @@ export function DashboardHeader() {
                   className="rounded-full bg-background/50 hover:bg-background/80"
                 >
                   <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                    <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
-                      alt={user?.username || "User"}
-                    />
                     <AvatarFallback className="bg-primary/10 text-primary">
                       {getUserInitials()}
                     </AvatarFallback>
@@ -141,7 +150,7 @@ export function DashboardHeader() {
               >
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.first_name} {user?.last_name}</p>
+                    <p className="text-sm font-medium leading-none">{getDisplayName()}</p>
                     <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
                 </DropdownMenuLabel>
