@@ -81,7 +81,6 @@ interface TransformedInfluencer {
     video: string;
   };
   socialLink: string;
-  website: string;
   phone: string;
   email: string;
 }
