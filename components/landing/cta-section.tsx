@@ -1,7 +1,12 @@
+"use client";
+
 import { AnimatedSection } from "../animated-section";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export function CtaSection() {
+  const router = useRouter();
+
   return (
     <AnimatedSection className="py-16 md:py-24 bg-gradient-brand text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_40%_60%,rgba(0,0,0,0.1),transparent_50%),radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.2),transparent_50%)]"></div>
@@ -21,6 +26,7 @@ export function CtaSection() {
               size="lg"
               variant="secondary"
               className="px-8 transition-all duration-300 hover:scale-105 rounded-full bg-white text-primary hover:text-white"
+              onClick={() => router.push('/auth/login')}
             >
               Get Started
             </Button>

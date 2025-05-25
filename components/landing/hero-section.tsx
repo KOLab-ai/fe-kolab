@@ -1,7 +1,12 @@
+"use client";
+
 import { AnimatedSection } from "../animated-section";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export function HeroSection() {
+  const router = useRouter();
+
   return (
     <AnimatedSection className="py-20 md:py-28 bg-gradient-to-b from-background to-muted/50 relative overflow-hidden">
       <div className="absolute inset-0 grid-pattern opacity-30"></div>
@@ -23,6 +28,7 @@ export function HeroSection() {
               <Button
                 size="lg"
                 className="px-8 transition-all duration-300 hover:scale-105 bg-gradient-brand rounded-full"
+                onClick={() => router.push('/auth/login')}
               >
                 Get Started
               </Button>
@@ -30,6 +36,7 @@ export function HeroSection() {
                 size="lg"
                 variant="outline"
                 className="px-8 transition-all duration-300 hover:border-primary rounded-full border-white/20 dark:border-gray-800/50"
+                onClick={() => router.push("#features")}
               >
                 Learn More
               </Button>
