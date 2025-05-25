@@ -126,7 +126,7 @@ export default function CampaignPage() {
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <div className="flex flex-wrap gap-1">
-                            {campaign.campaign_goals.map((goal, idx) => (
+                            {campaign?.campaign_goals?.map((goal, idx) => (
                               <Badge
                                 key={idx}
                                 variant="secondary"

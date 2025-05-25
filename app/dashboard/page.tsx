@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ArrowUpRight, Download, Filter, RefreshCw, Save } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import {
   Select,
@@ -139,6 +139,7 @@ export default function DashboardPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<string>("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Fetch campaigns
   useEffect(() => {
@@ -216,6 +217,23 @@ export default function DashboardPage() {
     influencers.reduce((sum, inf) => sum + inf.matchScore, 0) / influencers.length
   );
 
+  const handleCampaignChange = (value: string) => {
+    setSelectedCampaign(value);
+    
+    // Update URL query parameter
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('campaign', value);
+    router.push(`?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    // Get initial campaign from URL query parameter
+    const campaignId = searchParams.get('campaign');
+    if (campaignId) {
+      setSelectedCampaign(campaignId);
+    }
+  }, [searchParams]);
+
   return (
     <div className="flex-1 p-4 md:p-6 mx-auto w-full">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
@@ -228,7 +246,7 @@ export default function DashboardPage() {
         <div className="w-[200px]">
           <Select
             value={selectedCampaign}
-            onValueChange={setSelectedCampaign}
+            onValueChange={handleCampaignChange}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select campaign" />
@@ -274,8 +292,8 @@ export default function DashboardPage() {
       <Tabs defaultValue="recommendations" className="mb-6">
         <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex">
           <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-          <TabsTrigger value="saved">Saved (12)</TabsTrigger>
-          <TabsTrigger value="contacted">Contacted (5)</TabsTrigger>
+          <TabsTrigger value="saved">Saved (0)</TabsTrigger>
+          <TabsTrigger value="contacted">Contacted (0)</TabsTrigger>
         </TabsList>
         <TabsContent value="recommendations" className="mt-4">
           <Card>
@@ -318,7 +336,7 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              <div className="mt-6 flex justify-center">
+              {/* <div className="mt-6 flex justify-center">
                 <Button variant="outline" className="mr-2">
                   Load More
                 </Button>
@@ -326,7 +344,7 @@ export default function DashboardPage() {
                   View All Recommendations
                   <ArrowUpRight className="ml-1 h-4 w-4" />
                 </Button>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </TabsContent>
@@ -366,7 +384,7 @@ export default function DashboardPage() {
         </TabsContent>
       </Tabs>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>Campaign Performance</CardTitle>
@@ -429,7 +447,7 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }
